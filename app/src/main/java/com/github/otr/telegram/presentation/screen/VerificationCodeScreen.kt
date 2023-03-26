@@ -45,13 +45,16 @@ fun VerificationCodeScreen() {
             )
             Spacer(modifier = Modifier.padding(defaultPadding))
             Text(
-                text = stringResource(R.string.verification_code_screen_label),
+                text = stringResource(R.string.verification_code_screen_help_text),
                 textAlign = TextAlign.Justify
             )
             Spacer(modifier = Modifier.padding(defaultPadding))
             TextField(
                 value = "",
                 onValueChange = {},
+                label = {
+                    Text(text = stringResource(id = R.string.verification_code_label))
+                },
                 placeholder = {
                     Text(text = stringResource(R.string.verification_code_screen_placeholder))
                 }

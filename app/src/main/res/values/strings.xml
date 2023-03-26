@@ -1,8 +1,10 @@
 <resources>
     <string name="app_name">Kotlin Telegram Client</string>
     <string name="submit_button">Submit</string>
-    <string name="login_screen_input_number_label">Hello! Type your number down below, to receive a verification code:</string>
+    <string name="phone_number_label">Phone Number</string>
+    <string name="verification_code_label">Verification Code</string>
+    <string name="login_screen_input_number_help_text">Hello! Type your number down below, to receive a verification code:</string>
     <string name="login_screen_phone_placeholder">+1 345 333 00 00</string>
-    <string name="verification_code_screen_label">You should have received some verification code. Please, open your Mobile app and type in the input area below received code.</string>
+    <string name="verification_code_screen_help_text">You should have received some verification code. Please, open your Mobile app and type in the input area below received code.</string>
     <string name="verification_code_screen_placeholder">66016</string>
 </resources>
