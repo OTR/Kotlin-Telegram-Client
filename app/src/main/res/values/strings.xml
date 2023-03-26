@@ -2,6 +2,9 @@
     <string name="app_name">Kotlin Telegram Client</string>
     <string name="submit_button">Submit</string>
     <string name="phone_number_label">Phone Number</string>
+    <string name="log_out_label">Log out</string>
+    <string name="settings_label">Settings</string>
+    <string name="about_label">About</string>
     <string name="verification_code_label">Verification Code</string>
     <string name="login_screen_input_number_help_text">Hello! Type your number down below, to receive a verification code:</string>
     <string name="login_screen_phone_placeholder">+1 345 333 00 00</string>
