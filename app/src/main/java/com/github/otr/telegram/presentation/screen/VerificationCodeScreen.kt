@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
@@ -43,12 +44,12 @@ fun VerificationCodeScreen() {
                 contentDescription = "Application Logo",
                 modifier = Modifier.fillMaxWidth()
             )
-            Spacer(modifier = Modifier.padding(defaultPadding))
+            Spacer(modifier = Modifier.height(defaultPadding))
             Text(
                 text = stringResource(R.string.verification_code_screen_help_text),
                 textAlign = TextAlign.Justify
             )
-            Spacer(modifier = Modifier.padding(defaultPadding))
+            Spacer(modifier = Modifier.height(defaultPadding))
             TextField(
                 value = "",
                 onValueChange = {},
@@ -59,7 +60,7 @@ fun VerificationCodeScreen() {
                     Text(text = stringResource(R.string.verification_code_screen_placeholder))
                 }
             )
-            Spacer(modifier = Modifier.padding(defaultPadding))
+            Spacer(modifier = Modifier.height(defaultPadding))
             Button(onClick = { }) {
                 Text(text = stringResource(R.string.submit_button))
             }

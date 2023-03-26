@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.Button
@@ -43,12 +44,12 @@ fun LoginScreen() {
                 contentDescription = "Application Logo",
                 modifier = Modifier.size(defaultPadding * 8)
             )
-            Spacer(modifier = Modifier.padding(defaultPadding))
+            Spacer(modifier = Modifier.height(defaultPadding))
             Text(
                 text = stringResource(R.string.login_screen_input_number_help_text),
                 textAlign = TextAlign.Justify
             )
-            Spacer(modifier = Modifier.padding(defaultPadding))
+            Spacer(modifier = Modifier.height(defaultPadding))
             TextField(
                 value = "",
                 onValueChange = {},
@@ -59,7 +60,7 @@ fun LoginScreen() {
                     Text(text = stringResource(R.string.login_screen_phone_placeholder))
                 }
             )
-            Spacer(modifier = Modifier.padding(defaultPadding))
+            Spacer(modifier = Modifier.height(defaultPadding))
             Button(onClick = { }) {
                 Text(text = stringResource(R.string.submit_button))
             }
