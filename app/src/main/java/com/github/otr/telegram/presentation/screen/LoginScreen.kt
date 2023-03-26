@@ -45,13 +45,16 @@ fun LoginScreen() {
             )
             Spacer(modifier = Modifier.padding(defaultPadding))
             Text(
-                text = stringResource(R.string.login_screen_input_number_label),
+                text = stringResource(R.string.login_screen_input_number_help_text),
                 textAlign = TextAlign.Justify
             )
             Spacer(modifier = Modifier.padding(defaultPadding))
             TextField(
                 value = "",
                 onValueChange = {},
+                label = {
+                        Text(text = stringResource(id = R.string.phone_number_label))
+                },
                 placeholder = {
                     Text(text = stringResource(R.string.login_screen_phone_placeholder))
                 }
