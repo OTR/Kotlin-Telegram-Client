@@ -2,6 +2,7 @@
     <string name="app_name">Kotlin Telegram Client</string>
     <string name="submit_button">Submit</string>
     <string name="phone_number_label">Phone Number</string>
+    <string name="chat_list_label">Chat List</string>
     <string name="log_out_label">Log out</string>
     <string name="settings_label">Settings</string>
     <string name="about_label">About</string>

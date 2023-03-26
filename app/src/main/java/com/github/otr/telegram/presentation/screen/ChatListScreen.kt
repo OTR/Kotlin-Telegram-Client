@@ -2,13 +2,13 @@ package com.github.otr.telegram.presentation.screen
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -17,11 +17,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.github.otr.telegram.domain.entity.Chat
-import com.github.otr.telegram.presentation.component.SideDrawer
 
 private val defaultPadding: Dp = 16.dp
 
 @Preview
+@Composable
+private fun ChatListScreenPreview(){
+    val paddingValues: PaddingValues = PaddingValues(0.dp)
+    ChatListScreen(paddingValues = paddingValues)
+}
+
 @Composable
 fun ChatListScreen(
     chatRoster: List<Chat> = listOf(
@@ -29,42 +34,36 @@ fun ChatListScreen(
         Chat(2L, "Bob"),
         Chat(3L, "Charly"),
         Chat(4L, "Danny"),
-    )
+    ),
+    paddingValues: PaddingValues
 ) {
-    Scaffold(
-        drawerContent = {
-            SideDrawer()
-        }
-
-    ) { paddingValues ->
-        Surface(
-            color = MaterialTheme.colors.background,
+    Surface(
+        color = MaterialTheme.colors.background,
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(paddingValues = paddingValues),
+    ) {
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(defaultPadding),
             modifier = Modifier
+                .padding(defaultPadding)
                 .fillMaxSize()
-                .padding(paddingValues = paddingValues),
         ) {
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(defaultPadding),
-                modifier = Modifier
-                    .padding(defaultPadding)
-                    .fillMaxSize()
-            ) {
-                items(items = chatRoster, key = { it.id }) { chatItem ->
-                    Card(
-                        elevation = 8.dp,
-                        backgroundColor = MaterialTheme.colors.background,
-                        border = BorderStroke(
-                            width = 1.dp,
-                            color = MaterialTheme.colors.onBackground
-                        ),
-                        modifier = Modifier.fillMaxSize()
+            items(items = chatRoster, key = { it.id }) { chatItem ->
+                Card(
+                    elevation = 8.dp,
+                    backgroundColor = MaterialTheme.colors.background,
+                    border = BorderStroke(
+                        width = 1.dp,
+                        color = MaterialTheme.colors.onBackground
+                    ),
+                    modifier = Modifier.fillMaxSize()
+                )
+                {
+                    Text(
+                        text = "Chat with ${chatItem.name}",
+                        modifier = Modifier.padding(4.dp)
                     )
-                    {
-                        Text(
-                            text = "Chat with ${chatItem.name}",
-                            modifier = Modifier.padding(4.dp)
-                        )
-                    }
                 }
             }
         }
