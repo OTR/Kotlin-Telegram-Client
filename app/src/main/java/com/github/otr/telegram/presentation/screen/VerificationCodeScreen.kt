@@ -5,8 +5,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -27,7 +27,7 @@ private val defaultPadding: Dp = 16.dp
 
 @Preview
 @Composable
-fun LoginScreen() {
+fun VerificationCodeScreen() {
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -39,13 +39,13 @@ fun LoginScreen() {
             modifier = Modifier.padding(defaultPadding)
         ) {
             Image(
-                painter = painterResource(id = R.drawable.ic_application_logo),
+                painter = painterResource(id = R.drawable.verification_code),
                 contentDescription = "Application Logo",
-                modifier = Modifier.size(defaultPadding * 8)
+                modifier = Modifier.fillMaxWidth()
             )
             Spacer(modifier = Modifier.padding(defaultPadding))
             Text(
-                text = stringResource(R.string.login_screen_input_number_label),
+                text = stringResource(R.string.verification_code_screen_label),
                 textAlign = TextAlign.Justify
             )
             Spacer(modifier = Modifier.padding(defaultPadding))
@@ -53,7 +53,7 @@ fun LoginScreen() {
                 value = "",
                 onValueChange = {},
                 placeholder = {
-                    Text(text = stringResource(R.string.login_screen_phone_placeholder))
+                    Text(text = stringResource(R.string.verification_code_screen_placeholder))
                 }
             )
             Spacer(modifier = Modifier.padding(defaultPadding))
