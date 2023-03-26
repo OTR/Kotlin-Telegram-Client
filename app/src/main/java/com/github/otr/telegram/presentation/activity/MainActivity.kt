@@ -1,4 +1,4 @@
-package com.github.otr.telegram
+package com.github.otr.telegram.presentation.activity
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
