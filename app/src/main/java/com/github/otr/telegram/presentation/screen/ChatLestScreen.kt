@@ -2,7 +2,6 @@ package com.github.otr.telegram.presentation.screen
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -14,8 +13,11 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.github.otr.telegram.domain.entity.Chat
+
+private val defaultPadding: Dp = 16.dp
 
 @Preview
 @Composable
@@ -32,9 +34,9 @@ fun ChatListScreen(
         modifier = Modifier.fillMaxSize()
     ) {
         LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(16.dp),
+            verticalArrangement = Arrangement.spacedBy(defaultPadding),
             modifier = Modifier
-                .padding(16.dp)
+                .padding(defaultPadding)
                 .fillMaxSize()
         ) {
             items(items = chatRoster, key = { it.id }) { chatItem ->
@@ -51,8 +53,6 @@ fun ChatListScreen(
                     Text(text = "Chat with ${chatItem.name}")
                 }
             }
-
         }
     }
 }
-
