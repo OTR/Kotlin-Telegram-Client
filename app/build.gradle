@@ -65,4 +65,10 @@ dependencies {
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_ui_version"
     debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_ui_version"
 
+    // Observe LiveData as State , observeAsState()
+    implementation "androidx.compose.runtime:runtime-livedata:$compose_ui_version"
+
+    // To write Unit Tests for View Model layer
+    testImplementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1"
+
 }
