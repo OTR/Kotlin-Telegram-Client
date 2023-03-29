@@ -2,18 +2,21 @@ package com.github.otr.telegram.presentation.screen
 
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
-import com.github.otr.telegram.presentation.component.SideDrawer
 
-@Preview
+import com.github.otr.telegram.presentation.component.SideDrawer
+import com.github.otr.telegram.presentation.viewmodel.MainViewModel
+
 @Composable
-fun MainScreen() {
+fun MainScreen(
+    viewModel: MainViewModel
+) {
 
     Scaffold(
         drawerContent = { SideDrawer() }
     ) { paddingValues ->
 
-        ChatListScreen(paddingValues = paddingValues)
+        ChatListScreen(viewModel = viewModel, paddingValues = paddingValues)
 
     }
+
 }
