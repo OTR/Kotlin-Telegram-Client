@@ -6,6 +6,7 @@ import androidx.compose.material.icons.outlined.ExitToApp
 import androidx.compose.material.icons.outlined.MailOutline
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.ui.graphics.vector.ImageVector
+
 import com.github.otr.telegram.R
 
 sealed class NavigationItem(
