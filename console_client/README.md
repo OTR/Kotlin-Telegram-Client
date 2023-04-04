@@ -28,7 +28,7 @@ Timeout: 0 seconds
 Code type: TelegramMessage: 87625
 ```
 
-![verification code](../docs/img/verification_code.png | width=100))
+![verification code](../docs/img/verification_code.png )
 
 From now on if you have been successfully logged in client will print out its name (first name of account):
 
