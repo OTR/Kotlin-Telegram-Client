@@ -15,7 +15,7 @@ Contains Android Application module
 
 ### `console_client` directory
 
-Contains [Simple Telegram Console Client](console-client/README.md) with use of TD Light Java
+Contains [Simple Telegram Console Client](console_client/README.md) with use of TD Light Java
 
 ## Requirements
 

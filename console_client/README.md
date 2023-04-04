@@ -35,3 +35,11 @@ From now on if you have been successfully logged in client will print out its na
 ```text
 Hello, my name is: Kotlin
 ```
+
+## Configuration files
+
+After first run your authentication credentials will be saved in file-based database in directory located at:
+
+`console_client/src/main/resources/tdlib/db/`
+
+So you don't need receive and type a verification code on the next time
