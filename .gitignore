@@ -1,3 +1,6 @@
+# TD Light Java cache directory where JNI is located
+.cache/
+
 # Built application files
 *.apk
 *.aar

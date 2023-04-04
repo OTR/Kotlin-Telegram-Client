@@ -1,0 +1,26 @@
+plugins {
+    id 'java-library'
+    id 'org.jetbrains.kotlin.jvm'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+repositories {
+    mavenCentral()
+    maven { url "https://mvn.mchv.eu/repository/mchv/" }
+}
+
+dependencies {
+    // TD Light Java
+    //  implementation(platform("it.tdlight:tdlight-java-bom:2.8.4.1"))
+    implementation("it.tdlight:tdlight-java:2.8.5.7")
+    implementation("it.tdlight:tdlight-natives-windows-amd64:4.0.274")
+
+    // SLF4J API
+    implementation('org.slf4j:slf4j-api:2.0.7')
+    implementation("org.slf4j:slf4j-simple:2.0.7")
+
+}
