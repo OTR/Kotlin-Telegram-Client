@@ -9,7 +9,13 @@ TODO
 
 ## Project Structure
 
-TODO
+### `app` directory
+
+Contains Android Application module
+
+### `console_client` directory
+
+Contains [Simple Telegram Console Client](console_client/README.md) with use of TD Light Java
 
 ## Requirements
 
