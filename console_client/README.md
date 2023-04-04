@@ -1,4 +1,4 @@
-# Simple Telegram Console Clint
+# Simple Telegram Console Client
 
 With use of [TD Light Java](https://github.com/tdlight-team/tdlight-java)
 
@@ -28,7 +28,7 @@ Timeout: 0 seconds
 Code type: TelegramMessage: 87625
 ```
 
-![verification code](docs/img/verification_code.png)
+![verification code](../docs/img/verification_code.png)
 
 From now on if you have been successfully logged in client will print out its name (first name of account):
 
