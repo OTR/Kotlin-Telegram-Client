@@ -19,7 +19,7 @@ private val ADMIN_USER: TdApi.MessageSender = TdApi.MessageSenderUser(ADMIN_ID)
  * client.addCommandHandler<TdApi.Update>("stop", stopCommandHandler(client))
  * ```
  */
-fun stopCommandHandler(client: SimpleTelegramClient) = CommandHandler { chat, commandSender, arguments ->
+fun onStopCommand(client: SimpleTelegramClient) = CommandHandler { chat, commandSender, arguments ->
     if (isAdmin(commandSender)) {
         // Stop the client
         println("Received stop command. closing...")
