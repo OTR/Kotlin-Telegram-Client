@@ -48,6 +48,10 @@ So you don't need receive and type a verification code on the next time
 
 ### Pattern explanation
 
+:soon: _TODO_
+
 ### Replacements have made
 
 Sometimes inner TD Lib logger sends a log message with trailing `\n` character
+
+:soon: _TODO_

@@ -5,7 +5,7 @@ Android application written in Kotlin making use of TDLight library to interact 
 
 ## Screenshots
 
-TODO
+:soon: _TODO_
 
 ## Project Structure
 
@@ -41,7 +41,7 @@ Jetpack Compose Compiler version: 1.4.4
 
 ## Tested on devices (test device environment)
 
-TODO
+:soon: _TODO_
 
 ## References
 
@@ -51,7 +51,7 @@ TODO
 
 ### Articles with code examples in Java
 
-TODO
+:soon: _TODO_
 
 ### Code examples in Kotlin
 
@@ -62,4 +62,4 @@ On the first run will request code confirmation to login on the device as sender
 
 ### Articles with code examples in Kotlin
 
-TODO
+:soon: _TODO_
