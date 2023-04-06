@@ -5,10 +5,29 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 /**
+ * Handle Authorization States which have sent from the TD Lib C++ module.
+ * Each State represents a certain stage of the whole Authorization process.
+ * If there is no 2FA set that casual Authorization Lifecycle is kind of the following:
+ *   1. Always starts with **TdApi.AuthorizationStateWaitTdlibParameters** - it means that
+ *     TD Lib waits for the client sending it's configuration
+ *   2. If it's the first log in and no sessions have saved locally in file-based database
+ *     TD Lib will asks for user's phone number by **TdApi.AuthorizationStateWaitPhoneNumber** state
+ *   3. TODO: Fill me **TdApi.AuthorizationStateWaitCode**
+ *   4. By **TdApi.AuthorizationStateReady** TD Lib says that you are successfully logged in.
+ *     Since that stage initialization is over and you can send a variety of **TdApi.Function**'s
+ *
  * <b>Sample Usage</b>
  * ```
  * client.addUpdateHandler(TdApi.UpdateAuthorizationState::class.java, ::onUpdateAuthorizationState)
  * ```
+ *
+ * @see <a href="https://tdlight-team.github.io/tdlight-docs/tdlight.api/it/tdlight/jni/TdApi.UpdateAuthorizationState.html">
+ *     Documentation on returned type TdApi.UpdateAuthorizationState
+ *     </a>
+ *
+ * @see <a href="https://tdlight-team.github.io/tdlight-docs/tdlight.api/it/tdlight/jni/TdApi.AuthorizationState.html">
+ *     Which is a container for it's property of base abstract type TdApi.AuthorizationState
+ *     </a>
  */
 fun onUpdateAuthorizationState(update: TdApi.UpdateAuthorizationState) {
 
@@ -47,4 +66,5 @@ fun onUpdateAuthorizationState(update: TdApi.UpdateAuthorizationState) {
             logger.debug("$causePrefix $causeName, $message")
         }
     }
+
 }

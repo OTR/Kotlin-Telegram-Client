@@ -29,13 +29,13 @@ fun onCommonUpdates(client: SimpleTelegramClient) = GenericUpdateHandler<TdApi.U
     )
     when (update) {
         is TdApi.UpdateOption -> {
-            val causeName: String = "UpdateOption"
+            val causeName: String = "TdApi.UpdateOption"
             val message: String = "${update.name} : ${update.value}"
             logger.debug("$causePrefix $causeName, $message")
         }
         else -> {
             val causeName: String = update.javaClass.simpleName
-            val message: String = "Update type $causeName is not supported"
+            val message: String = "Update type TdApi.$causeName is not supported"
             logger.debug("$causePrefix $causeName, $message")
         }
     }

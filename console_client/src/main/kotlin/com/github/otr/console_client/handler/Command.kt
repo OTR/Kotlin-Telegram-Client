@@ -27,7 +27,7 @@ fun onStopCommand(client: SimpleTelegramClient) = CommandHandler { chat, command
     if (isAdmin(commandSender)) {
         val logger: Logger = LoggerFactory.getLogger("StopCommand")
         val causePrefix: String = "Received"
-        val causeName: String = "UpdateNewMessage"
+        val causeName: String = "TdApi.UpdateNewMessage"
         val message: String = "Received `/stop` command. closing..."
         logger.debug("$causePrefix $causeName, $message")
         // Stop the client
