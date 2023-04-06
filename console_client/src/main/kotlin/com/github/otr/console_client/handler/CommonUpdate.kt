@@ -1,6 +1,8 @@
 package com.github.otr.console_client.handler
 
+import com.github.otr.console_client.handler.chat.*
 import it.tdlight.client.GenericUpdateHandler
+import it.tdlight.client.Result
 import it.tdlight.client.SimpleTelegramClient
 import it.tdlight.jni.TdApi
 import org.slf4j.Logger
@@ -39,7 +41,7 @@ class CommonUpdatesHandler(
             TdApi.UpdateAttachmentMenuBots::class.java,
             TdApi.UpdateChatFilters::class.java, // suspicious
             TdApi.UpdateChatThemes::class.java,
-            TdApi.UpdateConnectionState::class.java, //suspicious
+            TdApi.UpdateConnectionState::class.java, // suspicious
             TdApi.UpdateDiceEmojis::class.java,
             TdApi.UpdateDefaultReactionType::class.java,
             TdApi.UpdateFileDownloads::class.java,
@@ -54,31 +56,67 @@ class CommonUpdatesHandler(
         when (updateType) {
             //
             TdApi.UpdateAuthorizationState::class.java -> {
-                logger.debug(buildLogMessage(update, "TODO: Redirect to Auth Handler"))
+                logger.trace(buildLogMessage(update, "TODO: Redirect to Auth Handler"))
             }
-            //
+            // Note that in this branch we catch **ONLY THE LAST** message of a chat
             TdApi.UpdateChatLastMessage::class.java -> {
-                logger.debug(buildLogMessage(update, "TODO handling"))
+                update as TdApi.UpdateChatLastMessage
+                val chatLastMessage: TdApi.Message = update.lastMessage
+                // val chatId: Long = update.chatId
+                // val chatPositions: Array<TdApi.ChatPosition> = update.positions
+                MessageResultHandler(
+                    loggerName = "LastMessageHan"
+                ).onResult(Result.of(chatLastMessage))
             }
             //
             TdApi.UpdateChatPosition::class.java -> {
-                logger.debug(buildLogMessage(update, "TODO handling"))
+                update as TdApi.UpdateChatPosition
+                //  val chatId: Long = update.chatId
+                val chatPosition: TdApi.ChatPosition = update.position
+                ChatPositionResultHandler.onResult(Result.of(chatPosition))
             }
             //
             TdApi.UpdateNewChat::class.java -> {
-                logger.debug(buildLogMessage(update, "TODO handling"))
+                update as TdApi.UpdateNewChat
+                val newChat: TdApi.Chat = update.chat
+                ChatResultHandler.onResult(Result.of(newChat))
             }
-            //
+            // TODO: Rewrite Handler. Looks like you need to pass the whole update
+            //       and implement `GenericUpdateHandler`
+            // Number of unread chats, i.e. with unread messages or marked as unread, has changed.
+            // This update is sent only if the message database is used.
             TdApi.UpdateUnreadChatCount::class.java -> {
-                logger.debug(buildLogMessage(update, "TODO handling"))
+                update as TdApi.UpdateUnreadChatCount
+                val chatList: TdApi.ChatList = update.chatList
+                 val unreadCount: Int = update.unreadCount
+                // val unreadUnmutedCount: Int = update.unreadUnmutedCount
+                // val markedAsUnreadCount: Int = update.markedAsUnreadCount
+                // val markedAsUnreadUnmutedCount: Int = update.markedAsUnreadUnmutedCount
+                // val totalCount: Int = update.totalCount
+                logger.debug("You have $unreadCount unread chat of type ${chatList.javaClass.simpleName}")
+//                ChatListResultHandler.onResult(Result.of(chatList))
             }
-            //
+            // Number of unread messages in a chat list has changed
+            // This update is sent only if the message database is used.
+            // https://tdlight-team.github.io/tdlight-docs/tdlight.api/it/tdlight/jni/TdApi.UpdateUnreadMessageCount.html
             TdApi.UpdateUnreadMessageCount::class.java -> {
-                logger.debug(buildLogMessage(update, "TODO handling"))
+                update as TdApi.UpdateUnreadMessageCount
+                val unreadCount: Int = update.unreadCount
+                val chatListType: TdApi.ChatList = update.chatList
+                val chatListTypeName: String = chatListType.javaClass.simpleName
+                    .removePrefix("ChatList")
+                val unreadUnmutedCount: Int = update.unreadUnmutedCount
+                logger.debug(
+                    "The total number of unread messages in a Chat List of type $chatListTypeName" +
+                    " now equals to $unreadCount"
+                )
             }
-            //
+            // Triggers on a real regular user, Spam Bot,
+            // `Telegram` account and on itself in chat list
             TdApi.UpdateUser::class.java -> {
-                logger.debug(buildLogMessage(update, "TODO handling"))
+                update as TdApi.UpdateUser
+                val user: TdApi.User = update.user
+                UserResultHandler.onResult(Result.of(user))
             }
             //
             TdApi.UpdateOption::class.java -> {
