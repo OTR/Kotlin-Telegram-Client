@@ -1,4 +1,6 @@
 <configuration>
+    <variable name="BASE_LOG_DIR" value="console_client/src/main/resources/tdlib/log"/>
+<!-- ___________________________________________________________________________________________ -->
     <conversionRule
         conversionWord="shortLoggerName"
         converterClass="com.github.otr.console_client.log_handler.ShortLoggerNameConverter"
@@ -7,9 +9,9 @@
         conversionWord="shutDown"
         converterClass="com.github.otr.console_client.log_handler.ShutDownMethodConverter"
     />
-
-    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
-        <file>console_client/src/main/resources/tdlib/log/simple_telegram_client.log</file>
+<!-- ___________________________________________________________________________________________ -->
+    <appender name="ROOT_TO_FILE" class="ch.qos.logback.core.FileAppender">
+        <file>${BASE_LOG_DIR}/simple_telegram_client.log</file>
         <append>true</append>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <pattern>[%date{HH:mm:ss}][%-12thread][%-5level][%-14shortLoggerName] - %replace(%msg){'\n', ''}\n%shutDown</pattern>
@@ -18,8 +20,21 @@
             <charset>UTF-8</charset>
         </encoder>
     </appender>
-
+<!-- ___________________________________________________________________________________________ -->
+    <appender name="COMMON_UPDATES_TO_FILE" class="ch.qos.logback.core.FileAppender">
+        <file>${BASE_LOG_DIR}/common_updates.log</file>
+        <append>true</append>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>[%date{HH:mm:ss}][%-5level][%-14logger] - %msg\n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+<!-- ___________________________________________________________________________________________ -->
+    <logger name="CommonUpdates" level="DEBUG" additivity="true">
+        <appender-ref ref="COMMON_UPDATES_TO_FILE" />
+    </logger>
+<!-- ___________________________________________________________________________________________ -->
     <root level="debug">
-        <appender-ref ref="FILE" />
+        <appender-ref ref="ROOT_TO_FILE" />
     </root>
 </configuration>

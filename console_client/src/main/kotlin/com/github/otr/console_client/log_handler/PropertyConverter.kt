@@ -108,6 +108,9 @@ class CustomPropertyDefinedOnTheFly : PropertyDefinerBase() {
  * Just for testing purposes.
  */
 private fun main() {
-    val logger = LoggerFactory.getLogger("test.logger")
-    logger.debug("it.tdlight.AuthorizationStateReadyLoadChats")
+    val testLogger = LoggerFactory.getLogger("TestLogger")
+    testLogger.debug("it.tdlight.AuthorizationStateReadyLoadChats")
+
+    val updatesLogger = LoggerFactory.getLogger("CommonUpdates")
+    updatesLogger.debug("Hello world!")
 }

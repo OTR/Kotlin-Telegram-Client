@@ -1,9 +1,9 @@
 package com.github.otr.console_client.handler
 
-import ch.qos.logback.classic.Logger
 import it.tdlight.client.GenericUpdateHandler
 import it.tdlight.client.SimpleTelegramClient
 import it.tdlight.jni.TdApi
+import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 /**
@@ -16,19 +16,27 @@ import org.slf4j.LoggerFactory
  * ```
  * client.addUpdatesHandler { onCommonUpdates(client) }
  * ```
+ *
+ * @see it.tdlight.client.GenericUpdateHandler
  */
 fun onCommonUpdates(client: SimpleTelegramClient) = GenericUpdateHandler<TdApi.Update> { update ->
+
+    val logger: Logger = LoggerFactory.getLogger("CommonUpdates")
+    val causePrefix: String = "Received"
+
     val uninterestedUpdateTypes: List<TdApi.Update> = listOf(
         /* TODO */
     )
     when (update) {
         is TdApi.UpdateOption -> {
-//            println("${update.name} : ${update.value}") // TODO: Log to file
+            val causeName: String = "TdApi.UpdateOption"
+            val message: String = "${update.name} : ${update.value}"
+            logger.debug("$causePrefix $causeName, $message")
         }
         else -> {
-            val updateName: String = update.javaClass.simpleName
-            val logger = LoggerFactory.getLogger("CommonUpdates")
-//            logger.debug("Update type $updateName not supported") // TODO: Log to file
+            val causeName: String = update.javaClass.simpleName
+            val message: String = "Update type TdApi.$causeName is not supported"
+            logger.debug("$causePrefix $causeName, $message")
         }
     }
 
