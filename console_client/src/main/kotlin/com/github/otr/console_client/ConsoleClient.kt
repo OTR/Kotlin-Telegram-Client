@@ -1,11 +1,6 @@
 package com.github.otr.console_client
 
-import com.github.otr.console_client.handler.HandlerType
-import com.github.otr.console_client.handler.onCommonUpdates
-import com.github.otr.console_client.handler.onGetMe
-import com.github.otr.console_client.handler.onUpdateAuthorizationState
-import com.github.otr.console_client.handler.onUpdateNewMessage
-import com.github.otr.console_client.handler.onStopCommand
+import com.github.otr.console_client.handler.*
 
 import it.tdlight.client.APIToken
 import it.tdlight.client.AuthenticationData
@@ -54,7 +49,7 @@ class ConsoleClient {
                 }
                 HandlerType.COMMON -> {
                     // Sort of a sink. Will handle all Update Types received from Telegram server
-                    client.addUpdatesHandler(onCommonUpdates(client))
+                    client.addUpdatesHandler(CommonUpdatesHandler(client))
                 }
                 HandlerType.GET_ME -> {
                     // Print out its nickname when successfully logged in
@@ -85,6 +80,6 @@ class ConsoleClient {
 
 fun main() {
     val client: ConsoleClient = ConsoleClient()
-    client.build(HandlerType.AUTH, HandlerType.NEW_MESSAGE)
+    client.build(HandlerType.AUTH, HandlerType.COMMON)
     client.main()
 }
