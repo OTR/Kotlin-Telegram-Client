@@ -54,7 +54,7 @@ class ConsoleClient {
                 }
                 HandlerType.COMMON -> {
                     // Sort of a sink. Will handle all Update Types received from Telegram server
-                    client.addUpdatesHandler { onCommonUpdates(client) }
+                    client.addUpdatesHandler(onCommonUpdates(client))
                 }
                 HandlerType.GET_ME -> {
                     // Print out its nickname when successfully logged in

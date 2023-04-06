@@ -1,8 +1,10 @@
 package com.github.otr.console_client.handler
 
+import ch.qos.logback.classic.Logger
 import it.tdlight.client.GenericUpdateHandler
 import it.tdlight.client.SimpleTelegramClient
 import it.tdlight.jni.TdApi
+import org.slf4j.LoggerFactory
 
 /**
  * Handle all Update Types inherited from TdApi.Update that our client receives
@@ -25,7 +27,8 @@ fun onCommonUpdates(client: SimpleTelegramClient) = GenericUpdateHandler<TdApi.U
         }
         else -> {
             val updateName: String = update.javaClass.simpleName
-//                println("Update type $updateName not supported") // TODO: Log to file
+            val logger = LoggerFactory.getLogger("CommonUpdates")
+//            logger.debug("Update type $updateName not supported") // TODO: Log to file
         }
     }
 

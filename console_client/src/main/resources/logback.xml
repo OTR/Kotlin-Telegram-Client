@@ -1,12 +1,20 @@
 <configuration>
-    <define name="hello" class="com.github.otr.console_client.log_handler.CustomPropertyDefinedOnTheFly" />
-    <conversionRule conversionWord="shortName" converterClass="com.github.otr.console_client.log_handler.ShortNameConverter" />
+    <conversionRule
+        conversionWord="shortLoggerName"
+        converterClass="com.github.otr.console_client.log_handler.ShortLoggerNameConverter"
+    />
+    <conversionRule
+        conversionWord="shutDown"
+        converterClass="com.github.otr.console_client.log_handler.ShutDownMethodConverter"
+    />
 
     <appender name="FILE" class="ch.qos.logback.core.FileAppender">
         <file>console_client/src/main/resources/tdlib/log/simple_telegram_client.log</file>
         <append>true</append>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <pattern>[%date{HH:mm:ss}][ %thread %shortName ${hello} ][%-5level][%-38logger{38}] - %replace(%msg){'\n', ''}\n</pattern>
+            <pattern>[%date{HH:mm:ss}][%-12thread][%-5level][%-14shortLoggerName] - %replace(%msg){'\n', ''}\n%shutDown</pattern>
+<!--            To trace logger origin call you could add [class: %class] [method: %method] -->
+<!--            Also could be useful [marker: %marker] -->
             <charset>UTF-8</charset>
         </encoder>
     </appender>
