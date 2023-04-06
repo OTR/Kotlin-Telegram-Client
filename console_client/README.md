@@ -43,3 +43,11 @@ After first run your authentication credentials will be saved in file-based data
 `console_client/src/main/resources/tdlib/db/`
 
 So you don't need receive and type a verification code on the next time
+
+## Logging configuration
+
+### Pattern explanation
+
+### Replacements have made
+
+Sometimes inner TD Lib logger sends a log message with trailing `\n` character
