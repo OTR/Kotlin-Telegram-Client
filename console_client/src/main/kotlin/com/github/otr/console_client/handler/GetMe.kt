@@ -16,7 +16,11 @@ import org.slf4j.LoggerFactory
  * client.addUpdatesHandler(onGetMe(client))
  * ```
  * @see <a href="https://tdlight-team.github.io/tdlight-docs/tdlight.api/it/tdlight/jni/TdApi.User.html">
- *     Documetation on returned type TdApi.User
+ *     Documentation on returned type `TdApi.User`
+ *     </a>
+ *
+ * @see <a href="https://tdlight-team.github.io/tdlight-docs/tdlight.api/it/tdlight/jni/TdApi.GetMe.html">
+ *      Documentation on requested function `TdApi.GetMe`
  *     </a>
  */
 fun onGetMe(

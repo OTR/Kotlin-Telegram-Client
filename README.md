@@ -3,6 +3,12 @@
 ## Project Description
 Android application written in Kotlin making use of TDLight library to interact with Telegram API. Jetpack Compose is used for UI.
 
+## Documentation
+
+Check out our [GitHub Wiki Pages](https://github.com/OTR/Kotlin-Telegram-Client/wiki)
+
+For documentation about `console_client` module check out its [README](console_client/README.md) file.
+
 ## Screenshots
 
 :soon: _TODO_
