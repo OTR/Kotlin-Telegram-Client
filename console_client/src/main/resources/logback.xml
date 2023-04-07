@@ -30,6 +30,19 @@
         </encoder>
     </appender>
 <!-- ___________________________________________________________________________________________ -->
+    <appender name="NEW_MESSAGES_TO_FILE" class="ch.qos.logback.core.FileAppender">
+        <file>${BASE_LOG_DIR}/new_messages.log</file>
+        <append>true</append>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>[%date{HH:mm:ss}][%-5level][%-14logger] - %msg\n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+<!-- ___________________________________________________________________________________________ -->
+    <logger name="ChatResultHand" level="DEBUG" additivity="true">
+        <appender-ref ref="NEW_MESSAGES_TO_FILE" />
+    </logger>
+<!-- ___________________________________________________________________________________________ -->
     <logger name="CommonUpdates" level="DEBUG" additivity="true">
         <appender-ref ref="COMMON_UPDATES_TO_FILE" />
     </logger>

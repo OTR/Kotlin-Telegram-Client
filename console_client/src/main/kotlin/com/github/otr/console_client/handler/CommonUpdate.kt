@@ -1,6 +1,10 @@
 package com.github.otr.console_client.handler
 
-import com.github.otr.console_client.handler.chat.*
+import com.github.otr.console_client.handler.chat.ChatPositionResultHandler
+import com.github.otr.console_client.handler.chat.ChatResultHandler
+import com.github.otr.console_client.handler.chat.MessageResultHandler
+import com.github.otr.console_client.handler.chat.UserResultHandler
+
 import it.tdlight.client.GenericUpdateHandler
 import it.tdlight.client.Result
 import it.tdlight.client.SimpleTelegramClient
@@ -54,7 +58,8 @@ class CommonUpdatesHandler(
     override fun onUpdate(update: TdApi.Update) {
         val updateType = update::class.java
         when (updateType) {
-            //
+            // Represents an incoming update about the authorization state of the user.
+            // https://github.com/OTR/Kotlin-Telegram-Client/wiki/Td-Api-Update-Authorization-State
             TdApi.UpdateAuthorizationState::class.java -> {
                 logger.trace(buildLogMessage(update, "TODO: Redirect to Auth Handler"))
             }
@@ -68,14 +73,19 @@ class CommonUpdatesHandler(
                     loggerName = "LastMessageHan"
                 ).onResult(Result.of(chatLastMessage))
             }
-            //
+            // Represents an update about the new position of a chat in a chat list.
             TdApi.UpdateChatPosition::class.java -> {
                 update as TdApi.UpdateChatPosition
                 //  val chatId: Long = update.chatId
                 val chatPosition: TdApi.ChatPosition = update.position
                 ChatPositionResultHandler.onResult(Result.of(chatPosition))
             }
-            //
+            // Represents a chat Entity from your Chat List that has been loaded/created.
+            // TdApi.Chat entity contains information about:
+            // user Id - unique numerical identifier of a Telegram user
+            // chat Type - represents a kind of Chat entity: Private, BasicGroup, SuperGroup
+            // title (in case of Private chat - first name of a person you have a chat with)
+            // unread count - a number of unread messages from that Person, Group ...
             TdApi.UpdateNewChat::class.java -> {
                 update as TdApi.UpdateNewChat
                 val newChat: TdApi.Chat = update.chat
@@ -118,13 +128,14 @@ class CommonUpdatesHandler(
                 val user: TdApi.User = update.user
                 UserResultHandler.onResult(Result.of(user))
             }
-            //
+            // https://github.com/OTR/Kotlin-Telegram-Client/wiki/List-of-Update-Options
+            // Skip UpdateOptions
             TdApi.UpdateOption::class.java -> {
                 update as TdApi.UpdateOption
                 val description: String = "${update.name} : ${update.value}"
                 logger.trace(buildLogMessage(update, description))
             }
-            //
+            // Skip uninterested Update Types
             in uninterestedUpdateTypes -> {
                 logger.trace(buildLogMessage(update, "Update type is not interested"))
             }

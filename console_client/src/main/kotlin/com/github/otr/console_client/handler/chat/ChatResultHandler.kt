@@ -1,11 +1,15 @@
 package com.github.otr.console_client.handler.chat
 
-import it.tdlight.client.GenericResultHandler
 import it.tdlight.client.Result
 import it.tdlight.jni.TdApi
 
 /**
+ * Handle incoming Updates about a Chat entity
  *
+ * @see
+ * <a href="https://github.com/OTR/Kotlin-Telegram-Client/wiki/Td-Api-Chat">
+ *     Documentation on returned type `TdApi.Chat`
+ * </a>
  */
 object ChatResultHandler : ResultHandlerBase<TdApi.Chat>(
     loggerName = "ChatResultHand"
