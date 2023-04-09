@@ -1,0 +1,31 @@
+plugins {
+    id 'java-library'
+    id 'org.jetbrains.kotlin.jvm'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+repositories {
+    mavenCentral()
+    maven { url "https://mvn.mchv.eu/repository/mchv/" }
+}
+
+dependencies {
+    // TD Light Java
+    implementation(platform("it.tdlight:tdlight-java-bom:2.8.10.6"))
+    implementation("it.tdlight:tdlight-java")
+    implementation("it.tdlight:tdlight-natives-windows-amd64")
+
+    // ZXing Core: barcode encoding/decoding library
+    implementation("com.google.zxing:core:3.5.1")
+
+    // SLF4J API
+    implementation("org.slf4j:slf4j-api:2.0.7")
+
+    // Logback Classic as logging implementation
+    implementation("ch.qos.logback:logback-classic:1.3.6")
+
+}

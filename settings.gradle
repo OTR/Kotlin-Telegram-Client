@@ -17,3 +17,4 @@ dependencyResolutionManagement {
 rootProject.name = "Kotlin Telegram Client"
 include ':app'
 include ':console_client'
+include ':simple_client'
