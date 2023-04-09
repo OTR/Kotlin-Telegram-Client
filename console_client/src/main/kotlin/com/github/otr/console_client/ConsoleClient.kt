@@ -1,6 +1,11 @@
 package com.github.otr.console_client
 
-import com.github.otr.console_client.handler.*
+import com.github.otr.console_client.handler.CommonUpdatesHandler
+import com.github.otr.console_client.handler.HandlerType
+import com.github.otr.console_client.handler.onGetMe
+import com.github.otr.console_client.handler.onStopCommand
+import com.github.otr.console_client.handler.onUpdateAuthorizationState
+import com.github.otr.console_client.handler.onUpdateNewMessage
 
 import it.tdlight.client.APIToken
 import it.tdlight.client.AuthenticationData

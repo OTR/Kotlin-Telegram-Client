@@ -29,21 +29,15 @@ Android device (or emulator) with API Level from API 26 (Android 8 Oreo) to API 
 
 ## Development environment
 
-Windows 10
-
-Gradle JDK: Android Studio Default JDK 11 (version 11.0.15)
-
-Android Gradle Plugin Version: 7.4.2
-
-Gradle Version: 7.5
-
-Kotlin version: 1.8.10
-
-Source compatibility: Java version 1.8 (Java 8)
-
-Jetpack Compose version: 1.4
-
-Jetpack Compose Compiler version: 1.4.4
+ * OS: Windows 10
+ * Gradle JDK: Android Studio Default JDK 11 (version 11.0.15)
+ * Android Gradle Plugin Version: 7.4.2
+ * Gradle Version: 7.5
+ * Kotlin version: 1.8.10
+ * Source compatibility (for Android Application): Java version 1.8 (Java 8)
+ * Source compatibility (for console client module): Java version 17 (Java 17)
+ * Jetpack Compose version: 1.4.1
+ * Jetpack Compose Compiler version: 1.4.4
 
 ## Tested on devices (test device environment)
 

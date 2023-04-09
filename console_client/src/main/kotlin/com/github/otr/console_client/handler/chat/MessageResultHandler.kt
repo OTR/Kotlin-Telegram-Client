@@ -31,7 +31,21 @@ class MessageResultHandler(
         // Message identifier; unique for the chat to which the message belongs.
         val messageId: Long = message.id
         // Identifier of the sender of the message.
-        val senderId: TdApi.MessageSender = message.senderId
+        val messageSender: TdApi.MessageSender = message.senderId
+        val senderId: Long = when (messageSender) {
+            is TdApi.MessageSenderUser -> {
+                messageSender.userId
+            }
+            is TdApi.MessageSenderChat -> {
+                messageSender.chatId
+            }
+            else -> {
+                val typeName: String = messageSender.javaClass.simpleName
+                val reason: String = "Unknown message sender type: $typeName"
+                logger.warn(reason)
+                throw IllegalStateException(reason)
+            }
+        }
         // Chat identifier. Same as senderId?
         val chatId: Long = message.chatId
         // message.canBeForwarder message.canBeSaved message.isChannelPost
