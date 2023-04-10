@@ -33,8 +33,9 @@ internal class MyAuthorizationStateWaitCodeHandler(
                 authorizationState.codeInfo.type
             )
             clientInteraction.onParameterRequest(
-                InputParameter.ASK_CODE, parameterInfo
-            ) { code: String? ->
+                InputParameter.ASK_CODE, // parameter
+                parameterInfo // parameterInfo
+            ) { code: String? -> // result
                 val response = TdApi.CheckAuthenticationCode(code)
                 client.send(response, MyDefaultResultHandler, exceptionHandler)
             }

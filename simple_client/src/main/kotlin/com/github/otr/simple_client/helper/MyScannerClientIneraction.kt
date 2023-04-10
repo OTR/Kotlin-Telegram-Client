@@ -99,8 +99,10 @@ internal class MyScannerClientInteraction(
                     else -> question = parameter.toString()
                 }
 
-                //
+                // Actual user input is been taken here
                 val result = ScannerUtils.askParameter(who, question)
+
+                // Provide the taken user input to result Consumer
                 if (trim) {
                     resultCons.accept(result.trim { it <= ' ' })
                 } else {

@@ -51,7 +51,9 @@ class CommonUpdatesHandler(
             TdApi.UpdateFileDownloads::class.java,
             TdApi.UpdateHavePendingNotifications::class.java,
             TdApi.UpdateScopeNotificationSettings::class.java,
-            TdApi.UpdateSelectedBackground::class.java
+            TdApi.UpdateSelectedBackground::class.java,
+            TdApi.UpdateUserStatus::class.java, // The user went online or offline.
+            TdApi.UpdateChatReadInbox::class.java, // number of unread messages has been changed.
         )
     }
 
@@ -134,6 +136,32 @@ class CommonUpdatesHandler(
                 update as TdApi.UpdateOption
                 val description: String = "${update.name} : ${update.value}"
                 logger.trace(buildLogMessage(update, description))
+            }
+            // A new message was received; can also be an outgoing message.
+            TdApi.UpdateNewMessage::class.java -> {
+                update as TdApi.UpdateNewMessage
+                val message: TdApi.Message = update.message
+                MessageResultHandler(loggerName = "NewMessageHand").onResult(Result.of(message))
+            }
+            // Some messages were deleted.
+            TdApi.UpdateDeleteMessages::class.java -> {
+                update as TdApi.UpdateDeleteMessages
+                // Chat identifier.
+                val chatId: Long = update.chatId
+                // True, if the messages are deleted only from the cache
+                // and can possibly be retrieved again in the future.
+                val fromCache: Boolean = update.fromCache
+                // True, if the messages are permanently deleted by a user
+                // (as opposed to just becoming inaccessible).
+                val isPermanent: Boolean = update.isPermanent
+                // Identifiers of the deleted messages.
+                val _messageIds: LongArray = update.messageIds
+                val messageIds: Array<Long> = _messageIds.toTypedArray()
+                val messageIdsAsString: String = messageIds.joinToString(", ")
+                val description: String = "In a chat with ID $chatId were deleted messages" +
+                    " with IDs: $messageIdsAsString;" +
+                    " from cache: $fromCache is permanent: $isPermanent"
+                logger.debug(buildLogMessage(update, description))
             }
             // Skip uninterested Update Types
             in uninterestedUpdateTypes -> {

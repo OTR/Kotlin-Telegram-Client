@@ -32,7 +32,8 @@ object ChatResultHandler : ResultHandlerBase<TdApi.Chat>(
 
         logger.debug(
             "There is a ${chatTypeName} chat with $chatTitle." +
-            " You have $unreadCount unread messages from them.")
+            " You have $unreadCount unread messages from them."
+        )
     }
 
 }

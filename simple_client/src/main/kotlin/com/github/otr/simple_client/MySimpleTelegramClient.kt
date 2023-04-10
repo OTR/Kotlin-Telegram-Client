@@ -12,7 +12,7 @@ import com.github.otr.simple_client.handler.auth.MyAuthorizationStateWaitPasswor
 import com.github.otr.simple_client.handler.auth.MyAuthorizationStateWaitRegistrationHandler
 import com.github.otr.simple_client.handler.auth.MyAuthorizationStateWaitTdlibParametersHandler
 import com.github.otr.simple_client.handler.MyCommandsHandler
-import com.github.otr.simple_client.helper.MySimpleTelegramClientInteraction
+import com.github.otr.simple_client.helper.InteractionWrapper
 
 import it.tdlight.client.Authenticable
 import it.tdlight.client.AuthenticationData
@@ -52,9 +52,12 @@ import java.util.function.Supplier
 class MySimpleTelegramClient(settings: TDLibSettings) : Authenticable {
 
     companion object {
-        val LOG: Logger = LoggerFactory.getLogger(MySimpleTelegramClient::class.java)
+        // a static field that holds an instance of a Logger
+        val LOG: Logger = LoggerFactory.getLogger(this::class.java)
+        //
         var blockingExecutor: ExecutorService = Executors.newSingleThreadExecutor()
 
+        // Check whether TD Lib Native libraries are accessible
         init {
             try {
                 Init.start()
@@ -67,13 +70,16 @@ class MySimpleTelegramClient(settings: TDLibSettings) : Authenticable {
 // ___________________________________________________________________________
 
     /**
-     *
+     * Request a new instance of `TelegramClient` from Client Manager
+     * keep that `inner` client as a private field of `SimpleTelegramClient`
+     * implementing Composite design pattern
      */
     private val client: TelegramClient =
         CommonClientManager.create(LibraryVersion.IMPLEMENTATION_NAME)
 
     /**
-     *
+     * A field to hold TD Lib settings such as:
+     * API token, file-based database directory path, etc.
      */
     private val settings: TDLibSettings
 
@@ -104,7 +110,12 @@ class MySimpleTelegramClient(settings: TDLibSettings) : Authenticable {
     private var authenticationData: AuthenticationData? = null
 
     /**
-     *
+     * Method of implemented `Authenticable` interface
+     * When you explicitly call this method as `client.getAuthenticationData { ... }`
+     * Main thread will be blocked, A console dialog will be popped up where th user
+     * will be asked to type their phone number (or another authentication method)
+     * that phone number will be saved in `AuthenticationData` object and passed into
+     * consumer function
      */
     override fun getAuthenticationData(result: Consumer<AuthenticationData>) {
         if (authenticationData is ConsoleInteractiveAuthenticationData) {
@@ -239,7 +250,7 @@ class MySimpleTelegramClient(settings: TDLibSettings) : Authenticable {
             TdApi.UpdateAuthorizationState::class.java,
             MyAuthorizationStateWaitRegistrationHandler(
                 client,
-                MySimpleTelegramClientInteraction(blockingExecutor, clientInteraction),
+                InteractionWrapper(blockingExecutor, clientInteraction),
                 ::handleDefaultException
             )
         )
@@ -251,7 +262,7 @@ class MySimpleTelegramClient(settings: TDLibSettings) : Authenticable {
             TdApi.UpdateAuthorizationState::class.java,
             MyAuthorizationStateWaitPasswordHandler(
                 client,
-                MySimpleTelegramClientInteraction(blockingExecutor, clientInteraction),
+                InteractionWrapper(blockingExecutor, clientInteraction),
                 ::handleDefaultException
             )
         )
@@ -262,7 +273,7 @@ class MySimpleTelegramClient(settings: TDLibSettings) : Authenticable {
         addUpdateHandler(
             TdApi.UpdateAuthorizationState::class.java,
             MyAuthorizationStateWaitOtherDeviceConfirmationHandler(
-                MySimpleTelegramClientInteraction(blockingExecutor, clientInteraction)
+                InteractionWrapper(blockingExecutor, clientInteraction)
             )
         )
 
@@ -273,7 +284,7 @@ class MySimpleTelegramClient(settings: TDLibSettings) : Authenticable {
             TdApi.UpdateAuthorizationState::class.java,
             MyAuthorizationStateWaitCodeHandler(
                 client,
-                MySimpleTelegramClientInteraction(blockingExecutor, clientInteraction),
+                InteractionWrapper(blockingExecutor, clientInteraction),
                 ::handleDefaultException
             )
         )

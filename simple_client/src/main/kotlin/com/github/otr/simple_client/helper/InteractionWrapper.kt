@@ -1,11 +1,12 @@
 package com.github.otr.simple_client.helper
 
 import com.github.otr.simple_client.MySimpleTelegramClient
+
 import it.tdlight.client.ClientInteraction
 import it.tdlight.client.InputParameter
 import it.tdlight.client.ParameterInfo
-import org.slf4j.Logger
 
+import org.slf4j.Logger
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.RejectedExecutionException
 import java.util.function.Consumer
@@ -13,8 +14,10 @@ import java.util.function.Consumer
 /**
  * Whenever you need to block Main Thread and ask for user input
  * This class is Called
+ * This class is a wrapper over a real ClientInteraction instance,
+ * that just call the real Interactor's method and handles exceptions
  */
-class MySimpleTelegramClientInteraction(
+class InteractionWrapper(
     private val blockingExecutor: ExecutorService,
     private val clientInteraction: ClientInteraction
 ) : ClientInteraction {
