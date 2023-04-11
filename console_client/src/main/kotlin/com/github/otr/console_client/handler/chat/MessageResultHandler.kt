@@ -67,7 +67,21 @@ class MessageResultHandler(
                 // All other entities can't contain each other.
                 // val entities: Array<TdApi.TextEntity> = formattedText.entities
                 val plainText: String = formattedText.text
-                logger.debug("Received a plain text message: `$plainText` in chat with id: $chatId")
+                if (loggerName == "LastMessageHan") {
+                    logger.debug(
+                        "The last message in a chat with id: $chatId has plain text: `$plainText`"
+                    )
+                } else if (loggerName == "NewMessageHand") {
+                    logger.debug(
+                        "Received a new plain text message with id $messageId: `$plainText`" +
+                        " in a chat with id: $chatId"
+                    )
+                }
+                else {
+                    logger.debug(
+                        "Received a plain text message: `$plainText` in a chat with id: $chatId"
+                    )
+                }
             }
             else -> {
                 // TODO: https://tdlight-team.github.io/tdlight-docs/tdlight.api/it/tdlight/jni/TdApi.MessageContent.html

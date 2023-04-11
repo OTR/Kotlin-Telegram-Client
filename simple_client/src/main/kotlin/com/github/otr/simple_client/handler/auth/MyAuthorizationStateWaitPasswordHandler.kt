@@ -32,8 +32,9 @@ internal class MyAuthorizationStateWaitPasswordHandler(
                 authorizationState.recoveryEmailAddressPattern
             )
             clientInteraction.onParameterRequest(
-                InputParameter.ASK_PASSWORD, parameterInfo
-            ) { password: String? ->
+                InputParameter.ASK_PASSWORD, // parameter
+                parameterInfo // parameterInfo
+            ) { password: String? -> // result
                 val response = TdApi.CheckAuthenticationPassword(password)
                 client.send(response, MyDefaultResultHandler, exceptionHandler)
             }

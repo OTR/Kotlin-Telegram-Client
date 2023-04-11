@@ -34,8 +34,9 @@ internal class MyAuthorizationStateWaitRegistrationHandler(
             // Get `Terms Of Service` and show them to the User
             val tos = ParameterInfoTermsOfService(authorizationState.termsOfService)
             clientInteraction.onParameterRequest(
-                InputParameter.TERMS_OF_SERVICE, tos
-            ) { ignored: String? ->
+                InputParameter.TERMS_OF_SERVICE, // parameter
+                tos // parameterInfo
+            ) { ignored: String? -> // result
 
                 // Ask the user for the first name
                 clientInteraction.onParameterRequest(

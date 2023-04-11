@@ -39,7 +39,22 @@
         </encoder>
     </appender>
 <!-- ___________________________________________________________________________________________ -->
+<!-- Log info about unread messages -->
+<!-- i.e.: There is a Private chat with Telegram. You have 0 unread messages from them. -->
     <logger name="ChatResultHand" level="DEBUG" additivity="true">
+        <appender-ref ref="NEW_MESSAGES_TO_FILE" />
+    </logger>
+<!-- ___________________________________________________________________________________________ -->
+<!-- Log info about the last message in a chat. Usually Telegram server sends you the last message
+   for every chat in your Chat List (IE Contact list, Roster) -->
+<!-- i.e.: The last message in a chat with id: 777000 has plain text: `Help` -->
+    <logger name="LastMessageHan" level="DEBUG" additivity="true">
+        <appender-ref ref="NEW_MESSAGES_TO_FILE" />
+    </logger>
+<!-- ___________________________________________________________________________________________ -->
+<!-- Log info about A new message was received; can also be an outgoing message. -->
+<!-- i.e.:  Received a new plain text message: `Help` in a chat with id: 777000 -->
+    <logger name="NewMessageHand" level="DEBUG" additivity="true">
         <appender-ref ref="NEW_MESSAGES_TO_FILE" />
     </logger>
 <!-- ___________________________________________________________________________________________ -->

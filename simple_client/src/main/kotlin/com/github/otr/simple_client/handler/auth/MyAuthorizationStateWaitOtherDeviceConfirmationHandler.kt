@@ -22,9 +22,9 @@ internal class MyAuthorizationStateWaitOtherDeviceConfirmationHandler(
         if (authorizationState is TdApi.AuthorizationStateWaitOtherDeviceConfirmation) {
             val parameterInfo: ParameterInfo = ParameterInfoNotifyLink(authorizationState.link)
             clientInteraction.onParameterRequest(
-                InputParameter.NOTIFY_LINK,
-                parameterInfo,
-                { ignored: String? -> } // FIXME:
+                InputParameter.NOTIFY_LINK, // parameter
+                parameterInfo, // parameterInfo
+                { ignored: String? -> } // result FIXME:
             )
         }
     }
