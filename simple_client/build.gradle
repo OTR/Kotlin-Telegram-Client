@@ -14,6 +14,7 @@ repositories {
 }
 
 dependencies {
+
     // TD Light Java
     implementation(platform("it.tdlight:tdlight-java-bom:2.8.10.6"))
     implementation("it.tdlight:tdlight-java")
