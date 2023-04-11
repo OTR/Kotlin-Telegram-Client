@@ -1,6 +1,7 @@
-package com.github.otr.console_client.handler
+package com.github.otr.console_client.data.handler
 
 import it.tdlight.jni.TdApi
+
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 

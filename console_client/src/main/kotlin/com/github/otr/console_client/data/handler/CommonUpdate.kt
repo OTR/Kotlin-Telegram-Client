@@ -1,14 +1,15 @@
-package com.github.otr.console_client.handler
+package com.github.otr.console_client.data.handler
 
-import com.github.otr.console_client.handler.chat.ChatPositionResultHandler
-import com.github.otr.console_client.handler.chat.ChatResultHandler
-import com.github.otr.console_client.handler.chat.MessageResultHandler
-import com.github.otr.console_client.handler.chat.UserResultHandler
+import com.github.otr.console_client.data.handler.chat.ChatPositionResultHandler
+import com.github.otr.console_client.data.handler.chat.ChatResultHandler
+import com.github.otr.console_client.data.handler.chat.MessageResultHandler
+import com.github.otr.console_client.data.handler.chat.UserResultHandler
 
 import it.tdlight.client.GenericUpdateHandler
 import it.tdlight.client.Result
 import it.tdlight.client.SimpleTelegramClient
 import it.tdlight.jni.TdApi
+
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 

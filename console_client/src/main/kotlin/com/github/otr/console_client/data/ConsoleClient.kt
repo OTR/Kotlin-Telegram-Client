@@ -1,11 +1,11 @@
-package com.github.otr.console_client
+package com.github.otr.console_client.data
 
-import com.github.otr.console_client.handler.CommonUpdatesHandler
-import com.github.otr.console_client.handler.HandlerType
-import com.github.otr.console_client.handler.onGetMe
-import com.github.otr.console_client.handler.onStopCommand
-import com.github.otr.console_client.handler.onUpdateAuthorizationState
-import com.github.otr.console_client.handler.onUpdateNewMessage
+import com.github.otr.console_client.data.handler.CommonUpdatesHandler
+import com.github.otr.console_client.data.handler.HandlerType
+import com.github.otr.console_client.data.handler.onGetMe
+import com.github.otr.console_client.data.handler.onStopCommand
+import com.github.otr.console_client.data.handler.onUpdateAuthorizationState
+import com.github.otr.console_client.data.handler.onUpdateNewMessage
 
 import it.tdlight.client.APIToken
 import it.tdlight.client.AuthenticationData
@@ -13,6 +13,7 @@ import it.tdlight.client.SimpleTelegramClient
 import it.tdlight.client.TDLibSettings
 import it.tdlight.common.Init
 import it.tdlight.jni.TdApi
+
 import kotlin.io.path.Path
 
 // The directory where TD Lib settings and cache located

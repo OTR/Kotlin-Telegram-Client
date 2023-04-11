@@ -1,4 +1,4 @@
-package com.github.otr.console_client.handler.chat
+package com.github.otr.console_client.data.handler.chat
 
 import it.tdlight.client.Result
 import it.tdlight.jni.TdApi

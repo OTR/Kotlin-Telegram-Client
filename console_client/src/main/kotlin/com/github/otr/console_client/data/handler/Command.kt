@@ -1,4 +1,4 @@
-package com.github.otr.console_client.handler
+package com.github.otr.console_client.data.handler
 
 import it.tdlight.client.CommandHandler
 import it.tdlight.client.SimpleTelegramClient

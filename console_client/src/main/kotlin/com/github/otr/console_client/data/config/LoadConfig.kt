@@ -1,4 +1,4 @@
-package com.github.otr.console_client.config
+package com.github.otr.console_client.data.config
 
 import ch.qos.logback.classic.Level
 import ch.qos.logback.classic.Logger

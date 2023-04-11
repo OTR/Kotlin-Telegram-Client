@@ -1,4 +1,4 @@
-package com.github.otr.console_client.log_handler
+package com.github.otr.console_client.data.log_handler
 
 import ch.qos.logback.classic.Level
 import ch.qos.logback.classic.pattern.LoggerConverter
