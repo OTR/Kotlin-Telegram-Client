@@ -13,6 +13,8 @@
     <appender name="ROOT_TO_FILE" class="ch.qos.logback.core.FileAppender">
         <file>${BASE_LOG_DIR}/simple_telegram_client.log</file>
         <append>true</append>
+<!-- Apply our own Filter. See documentation comments for a class `DenyEventsFromTDLightFilter` -->
+        <filter class="com.github.otr.console_client.log_handler.DenyEventsFromTDLightFilter" />
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <pattern>[%date{HH:mm:ss}][%-12thread][%-5level][%-14shortLoggerName] - %replace(%msg){'\n', ''}\n%shutDown</pattern>
 <!--            To trace logger origin call you could add [class: %class] [method: %method] -->
