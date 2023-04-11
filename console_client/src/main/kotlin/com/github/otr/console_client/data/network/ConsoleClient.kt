@@ -1,11 +1,11 @@
-package com.github.otr.console_client.data
+package com.github.otr.console_client.data.network
 
-import com.github.otr.console_client.data.handler.CommonUpdatesHandler
-import com.github.otr.console_client.data.handler.HandlerType
-import com.github.otr.console_client.data.handler.onGetMe
-import com.github.otr.console_client.data.handler.onStopCommand
-import com.github.otr.console_client.data.handler.onUpdateAuthorizationState
-import com.github.otr.console_client.data.handler.onUpdateNewMessage
+import com.github.otr.console_client.data.network.handler.CommonUpdatesHandler
+import com.github.otr.console_client.data.network.handler.HandlerType
+import com.github.otr.console_client.data.network.handler.onGetMe
+import com.github.otr.console_client.data.network.handler.onStopCommand
+import com.github.otr.console_client.data.network.handler.onUpdateAuthorizationState
+import com.github.otr.console_client.data.network.handler.onUpdateNewMessage
 
 import it.tdlight.client.APIToken
 import it.tdlight.client.AuthenticationData

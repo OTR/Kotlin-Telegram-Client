@@ -1,4 +1,4 @@
-package com.github.otr.console_client.data.handler
+package com.github.otr.console_client.data.network.handler
 
 /**
  * All the handlers should be registered as enum class values for convenience.

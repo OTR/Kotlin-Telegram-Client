@@ -1,9 +1,9 @@
-package com.github.otr.console_client.data.handler
+package com.github.otr.console_client.data.network.handler
 
-import com.github.otr.console_client.data.handler.chat.ChatPositionResultHandler
-import com.github.otr.console_client.data.handler.chat.ChatResultHandler
-import com.github.otr.console_client.data.handler.chat.MessageResultHandler
-import com.github.otr.console_client.data.handler.chat.UserResultHandler
+import com.github.otr.console_client.data.network.handler.chat.ChatPositionResultHandler
+import com.github.otr.console_client.data.network.handler.chat.ChatResultHandler
+import com.github.otr.console_client.data.network.handler.chat.MessageResultHandler
+import com.github.otr.console_client.data.network.handler.chat.UserResultHandler
 
 import it.tdlight.client.GenericUpdateHandler
 import it.tdlight.client.Result

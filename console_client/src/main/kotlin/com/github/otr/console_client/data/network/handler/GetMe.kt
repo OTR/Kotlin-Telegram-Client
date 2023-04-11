@@ -1,4 +1,4 @@
-package com.github.otr.console_client.data.handler
+package com.github.otr.console_client.data.network.handler
 
 import it.tdlight.client.GenericUpdateHandler
 import it.tdlight.client.Result
