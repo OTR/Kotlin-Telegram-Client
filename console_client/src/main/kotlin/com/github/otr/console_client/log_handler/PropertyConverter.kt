@@ -1,9 +1,12 @@
 package com.github.otr.console_client.log_handler
 
+import ch.qos.logback.classic.Level
 import ch.qos.logback.classic.pattern.LoggerConverter
 import ch.qos.logback.classic.pattern.MethodOfCallerConverter
 import ch.qos.logback.classic.spi.ILoggingEvent
 import ch.qos.logback.core.PropertyDefinerBase
+import ch.qos.logback.core.filter.Filter
+import ch.qos.logback.core.spi.FilterReply
 import org.slf4j.LoggerFactory
 
 /**
@@ -96,10 +99,42 @@ class ShutDownMethodConverter: MethodOfCallerConverter() {
  *     Defining variables, aka properties, on the fly
  *     </a>
  */
+@Deprecated("Just for testing purposes")
 class CustomPropertyDefinedOnTheFly : PropertyDefinerBase() {
 
     override fun getPropertyValue(): String {
         return "Hello!"
+    }
+
+}
+
+/**
+ * In the latest version of TD Light a logger with name `it.tdlight.TDLight` is too `loud`
+ * It floods appender with TONS of unnecessary lines such as UpdateOptions Stickers etc
+ * with level INFO, such kind of useful lines should be marked with level TRACE
+ * In order to prevent that overwhelming flood the following filter was added
+ * That filter denies all the lines lower than level WARN (i.e. INFO, DEBUG, TRACE)
+ * TODO: Create your own `filter` or event `converter` that changes log level from INFO to TRACE
+ * https://logback.qos.ch/manual/filters.html
+ *
+ * <b>See examples of implementations:</b>
+ *
+ * @see ch.qos.logback.classic.boolex.JaninoEventEvaluator
+ * @see ch.qos.logback.classic.filter.LevelFilter
+ * @see ch.qos.logback.classic.filter.ThresholdFilter
+ * @see ch.qos.logback.core.filter.EvaluatorFilter
+ */
+class DenyEventsFromTDLightFilter: Filter<ILoggingEvent>() {
+
+    /**
+     * Deny all events from a logger with name `it.tdlight.TDLight` and log level `INFO`
+     */
+    override fun decide(event: ILoggingEvent): FilterReply {
+        return if (event.loggerName == "it.tdlight.TDLight" && event.level == Level.INFO) {
+            FilterReply.DENY
+        } else {
+            FilterReply.ACCEPT
+        }
     }
 
 }
