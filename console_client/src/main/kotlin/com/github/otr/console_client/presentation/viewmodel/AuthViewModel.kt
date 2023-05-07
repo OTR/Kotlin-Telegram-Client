@@ -15,7 +15,6 @@ class AuthViewModel {
 
     private val repository: TelegramRepository = TelegramRepositoryImpl()
 
-
     private val _authState: MutableStateFlow<AuthState> = MutableStateFlow(AuthState.INITIAL)
     val authState: StateFlow<AuthState> = _authState.asStateFlow()
 

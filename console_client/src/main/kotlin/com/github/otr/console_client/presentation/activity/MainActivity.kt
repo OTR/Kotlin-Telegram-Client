@@ -18,12 +18,12 @@ object MainActivity {
 
         val authViewModel: AuthViewModel = AuthViewModel()
         val authStateFlow: StateFlow<AuthState> = authViewModel.authState
-        val str: AuthState = authStateFlow.value
-        println("Hello, initial value of: $str!")
+        val initialState: AuthState = authStateFlow.value
+        println("Hello, initial value of: $initialState!")
 
         runBlocking {
             authStateFlow.collect {
-                println("Hello, next value of: $str!")
+                println("Hello, next State value is: $it!")
             }
         }
     }
