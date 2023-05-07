@@ -17,7 +17,7 @@ object MainActivity {
     fun onCreate() {
 
         val authViewModel: AuthViewModel = AuthViewModel()
-        val authStateFlow: StateFlow<AuthState> = authViewModel.authState
+        val authStateFlow: StateFlow<AuthState> = authViewModel.authStateFlow
         val initialState: AuthState = authStateFlow.value
         println("Hello, initial value of: $initialState!")
 
