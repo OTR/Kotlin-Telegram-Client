@@ -3,6 +3,7 @@ package com.github.otr.console_client.presentation.activity
 import com.github.otr.console_client.domain.entity.AuthState
 import com.github.otr.console_client.presentation.viewmodel.AuthViewModel
 
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.flow.StateFlow
 
@@ -11,21 +12,52 @@ import kotlinx.coroutines.flow.StateFlow
  */
 object MainActivity {
 
+    private val authViewModel: AuthViewModel by lazy {
+        AuthViewModel()
+    }
+
     /**
      *
      */
     fun onCreate() {
+        // super.onCreate(savedInstanceState)
+        // setContentView(...)
+        //
+        observeViewModel()
+    }
 
-        val authViewModel: AuthViewModel = AuthViewModel()
+    /**
+     *
+     */
+    private fun observeViewModel() {
+
         val authStateFlow: StateFlow<AuthState> = authViewModel.authStateFlow
-        val initialState: AuthState = authStateFlow.value
-        println("Hello, initial value of: $initialState!")
 
         runBlocking {
+            delay(1000) // Wait until successful login
             authStateFlow.collect {
-                println("Hello, next State value is: $it!")
+                when(it) {
+                    AuthState.INITIAL -> { println("INITIAL") }
+                    AuthState.CLOSED -> { println("CLOSED") }
+                    AuthState.CLOSING -> { println("CLOSING") }
+                    AuthState.LOGGING_OUT -> { println("LOGGING_OUT") }
+                    AuthState.READY -> { println("READY") }
+                    AuthState.WAIT_CODE -> { println("WAIT_CODE") }
+                    AuthState.WAIT_EMAIL_ADDRESS -> { println("WAIT_EMAIL_ADDRESS") }
+                    AuthState.WAIT_EMAIL_CODE -> { println("WAIT_EMAIL_CODE") }
+                    AuthState.WAIT_OTHER_DEVICE_CONFIRMATION -> { println("WAIT_OTHER_DEVICE") }
+                    AuthState.WAIT_PASSWORD -> { println("WAIT_PASSWORD") }
+                    AuthState.WAIT_PHONE_NUMBER -> {
+//                        val phoneNumber: String = readln()
+                        println("WAIT_PHONE_NUMBER")
+//                        authViewModel.setPhoneNumber(phoneNumber)
+                    }
+                    AuthState.WAIT_REGISTRATION -> { println("WAIT_REGISTRATION") }
+                    AuthState.WAIT_TD_LIB_PARAMETERS -> { println("WAIT_TD_LIB_PARAMETERS") }
+                }
             }
         }
+
     }
 
 }

@@ -10,6 +10,9 @@ import kotlin.io.path.Path
 private const val RESOURCES_BASE_DIR: String = "console_client/src/main/resources/"
 private const val DEV_CONFIG_FILE_NAME: String = "console_client_dev.properties"
 
+// The directory where TD Lib settings and cache located
+const val RESOURCES_PATH: String = "console_client/src/main/resources/tdlib/"
+
 /**
  * A helper function to pass some variable values stored under `resources` directory
  * to the program during development stage.

@@ -11,4 +11,8 @@ interface TelegramRepository {
 
     fun getAuthStateFlow(): StateFlow<AuthState>
 
+    fun setVerificationCode(verificationCode: String)
+
+    fun setPhoneNumber(phoneNumber: String)
+
 }

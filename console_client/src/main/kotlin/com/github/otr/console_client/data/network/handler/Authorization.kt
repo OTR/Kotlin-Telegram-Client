@@ -1,7 +1,9 @@
 package com.github.otr.console_client.data.network.handler
 
-import com.github.otr.console_client.data.network.handler.chat.ResultHandlerBase
-import it.tdlight.client.Result
+import com.github.otr.console_client.data.network.ConsoleClient
+import com.github.otr.console_client.domain.entity.AuthState
+
+import it.tdlight.client.GenericUpdateHandler
 import it.tdlight.jni.TdApi
 
 import org.slf4j.Logger
@@ -32,93 +34,88 @@ import org.slf4j.LoggerFactory
  *     Which is a container for it's property of base abstract type TdApi.AuthorizationState
  *     </a>
  */
-fun onUpdateAuthorizationState(update: TdApi.UpdateAuthorizationState) {
+class UpdateAuthorizationStateHandler(
+    private val consoleCLI: ConsoleClient
+) : GenericUpdateHandler<TdApi.UpdateAuthorizationState> {
 
-    val logger: Logger = LoggerFactory.getLogger("AuthUpdate")
-    val causePrefix: String = "Received"
+    companion object {
+        private val logger: Logger = LoggerFactory.getLogger("AuthUpdate")
+        private const val causePrefix: String = "Received"
+    }
 
-    when (update.authorizationState) {
-        is TdApi.AuthorizationStateWaitTdlibParameters -> {
-            val causeName: String = "AuthorizationStateWaitTdlibParameters"
-            val message: String = "Usually Simple Client handles this for you so you don't need"
-            logger.debug("$causePrefix $causeName, $message")
-        }
-        is TdApi.AuthorizationStateReady -> {
-            val causeName: String = "AuthorizationStateReady"
-            val message: String = "Logged in"
-            logger.debug("$causePrefix $causeName, $message")
-        }
-        is TdApi.AuthorizationStateClosing -> {
-            val causeName: String = "AuthorizationStateClosing"
-            val message: String = "Closing..."
-            logger.debug("$causePrefix $causeName, $message")
-        }
-        is TdApi.AuthorizationStateClosed -> {
-            val causeName: String = "AuthorizationStateClosed"
-            val message: String = "Closed"
-            logger.debug("$causePrefix $causeName, $message")
-        }
-        is TdApi.AuthorizationStateLoggingOut -> {
-            val causeName: String = "AuthorizationStateLoggingOut"
-            val message: String = "Logging out..."
-            logger.debug("$causePrefix $causeName, $message")
-        }
-        else -> {
-            val causeName: String = "${update.authorizationState}"
-            val message: String = "Unsupported state"
-            logger.debug("$causePrefix $causeName, $message")
+    /**
+     *
+     */
+    override fun onUpdate(update: TdApi.UpdateAuthorizationState) {
+        when (update.authorizationState) {
+            is TdApi.AuthorizationStateWaitTdlibParameters -> {
+                consoleCLI.emitState(AuthState.WAIT_TD_LIB_PARAMETERS)
+                logAuthState(
+                    causeName = "AuthorizationStateWaitTdlibParameters",
+                    message = "Usually Simple Client handles this for you so you don't need"
+                )
+            }
+            is TdApi.AuthorizationStateWaitPhoneNumber -> {
+                consoleCLI.emitState(AuthState.WAIT_PHONE_NUMBER)
+                logAuthState(causeName = "AuthorizationStateWaitPhoneNumber", message = "TODO")
+            }
+            is TdApi.AuthorizationStateWaitEmailAddress -> {
+                consoleCLI.emitState(AuthState.WAIT_EMAIL_ADDRESS)
+                logAuthState(causeName = "AuthorizationStateWaitEmailAddress", message = "TODO")
+            }
+            is TdApi.AuthorizationStateWaitEmailCode -> {
+                consoleCLI.emitState(AuthState.WAIT_EMAIL_CODE)
+                logAuthState(causeName = "AuthorizationStateWaitEmailCode", message = "TODO")
+            }
+            is TdApi.AuthorizationStateWaitCode -> {
+                consoleCLI.emitState(AuthState.WAIT_CODE)
+                logAuthState(causeName = "AuthorizationStateWaitCode", message = "TODO")
+            }
+            is TdApi.AuthorizationStateWaitOtherDeviceConfirmation -> {
+                consoleCLI.emitState(AuthState.WAIT_OTHER_DEVICE_CONFIRMATION)
+                logAuthState(
+                    causeName = "AuthorizationStateWaitOtherDeviceConfirmation",
+                    message = "TODO"
+                )
+            }
+            is TdApi.AuthorizationStateWaitRegistration -> {
+                consoleCLI.emitState(AuthState.WAIT_REGISTRATION)
+                logAuthState(causeName = "AuthorizationStateWaitRegistration", message = "TODO")
+            }
+            is TdApi.AuthorizationStateWaitPassword -> {
+                consoleCLI.emitState(AuthState.WAIT_PASSWORD)
+                logAuthState(causeName = "AuthorizationStateWaitPassword", message = "TODO")
+            }
+            is TdApi.AuthorizationStateReady -> {
+                consoleCLI.emitState(AuthState.READY)
+                logAuthState(causeName = "AuthorizationStateReady", message = "Logged in")
+            }
+            is TdApi.AuthorizationStateLoggingOut -> {
+                consoleCLI.emitState(AuthState.LOGGING_OUT)
+                logAuthState(causeName = "AuthorizationStateLoggingOut", message = "Logging out...")
+            }
+            is TdApi.AuthorizationStateClosing -> {
+                consoleCLI.emitState(AuthState.CLOSING)
+                logAuthState(causeName = "AuthorizationStateClosing", message = "Closing...")
+            }
+            is TdApi.AuthorizationStateClosed -> {
+                consoleCLI.emitState(AuthState.CLOSED)
+                logAuthState(causeName = "AuthorizationStateClosed", message = "Closed")
+            }
+            else -> {
+                logAuthState(
+                    causeName = "${update.authorizationState}",
+                    message = "Unsupported state"
+                )
+            }
         }
     }
-}
 
-//
-//object UpdateAuthorizationStateHandler: ResultHandlerBase<TdApi.UpdateAuthorizationState>(
-//    loggerName = "AuthUpdate"
-//) {
-//
-//    private val causePrefix: String = "Received"
-//
-//    override fun onResult(result: Result<TdApi.UpdateAuthorizationState>) {
-//        val update: TdApi.UpdateAuthorizationState = result.get()
-//        when (update.authorizationState) {
-//            is TdApi.AuthorizationStateWaitTdlibParameters -> {
-//                val causeName: String = "AuthorizationStateWaitTdlibParameters"
-//                val message: String = "Usually Simple Client handles this for you so you don't need"
-//                logger.debug("$causePrefix $causeName, $message")
-//            }
-//            is TdApi.AuthorizationStateReady -> {
-//                val causeName: String = "AuthorizationStateReady"
-//                val message: String = "Logged in"
-//                logger.debug("$causePrefix $causeName, $message")
-//            }
-//            is TdApi.AuthorizationStateClosing -> {
-//                val causeName: String = "AuthorizationStateClosing"
-//                val message: String = "Closing..."
-//                logger.debug("$causePrefix $causeName, $message")
-//            }
-//            is TdApi.AuthorizationStateClosed -> {
-//                val causeName: String = "AuthorizationStateClosed"
-//                val message: String = "Closed"
-//                logger.debug("$causePrefix $causeName, $message")
-//            }
-//            is TdApi.AuthorizationStateLoggingOut -> {
-//                val causeName: String = "AuthorizationStateLoggingOut"
-//                val message: String = "Logging out..."
-//                logger.debug("$causePrefix $causeName, $message")
-//            }
-//            else -> {
-//                val causeName: String = "${update.authorizationState}"
-//                val message: String = "Unsupported state"
-//                logger.debug("$causePrefix $causeName, $message")
-//            }
-//        }
-//    }
-//
-//    /**
-//     *
-//     */
-//    private fun logAuthState(causeName: String, message: String) {
-//        logger.debug("$causePrefix $causeName, $message")
-//    }
-//
-//}
+    /**
+     *
+     */
+    private fun logAuthState(causeName: String, message: String) {
+        logger.debug("$causePrefix $causeName, $message")
+    }
+
+}

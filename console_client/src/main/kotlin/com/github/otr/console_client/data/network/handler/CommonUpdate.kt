@@ -1,5 +1,6 @@
 package com.github.otr.console_client.data.network.handler
 
+import com.github.otr.console_client.data.network.ConsoleClient
 import com.github.otr.console_client.data.network.handler.chat.ChatPositionResultHandler
 import com.github.otr.console_client.data.network.handler.chat.ChatResultHandler
 import com.github.otr.console_client.data.network.handler.chat.MessageResultHandler
@@ -7,7 +8,6 @@ import com.github.otr.console_client.data.network.handler.chat.UserResultHandler
 
 import it.tdlight.client.GenericUpdateHandler
 import it.tdlight.client.Result
-import it.tdlight.client.SimpleTelegramClient
 import it.tdlight.jni.TdApi
 import it.tdlight.jni.TdApi.Update
 
@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory
  * @see it.tdlight.client.GenericUpdateHandler
  */
 class CommonUpdatesHandler(
-    client: SimpleTelegramClient
+    private val consoleCLI: ConsoleClient
 ) : GenericUpdateHandler<TdApi.Update> {
 
     private companion object {
@@ -87,7 +87,7 @@ class CommonUpdatesHandler(
      */
     private fun handleAuthorizationState(update: TdApi.Update) {
         update as TdApi.UpdateAuthorizationState
-        onUpdateAuthorizationState(update)
+        UpdateAuthorizationStateHandler(consoleCLI).onUpdate(update)
     }
 
     /**

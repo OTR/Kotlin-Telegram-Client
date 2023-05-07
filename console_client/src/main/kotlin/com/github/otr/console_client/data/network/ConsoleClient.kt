@@ -1,23 +1,33 @@
 package com.github.otr.console_client.data.network
 
+import com.github.otr.console_client.data.network.config.RESOURCES_PATH
 import com.github.otr.console_client.data.network.handler.CommonUpdatesHandler
 import com.github.otr.console_client.data.network.handler.HandlerType
+import com.github.otr.console_client.data.network.handler.UpdateAuthorizationStateHandler
 import com.github.otr.console_client.data.network.handler.onGetMe
 import com.github.otr.console_client.data.network.handler.onStopCommand
-import com.github.otr.console_client.data.network.handler.onUpdateAuthorizationState
 import com.github.otr.console_client.data.network.handler.onUpdateNewMessage
+import com.github.otr.console_client.data.network.login_handler.MyScannerClientInteraction
+import com.github.otr.console_client.domain.entity.AuthState
 
 import it.tdlight.client.APIToken
 import it.tdlight.client.AuthenticationData
+import it.tdlight.client.ClientInteraction
 import it.tdlight.client.SimpleTelegramClient
 import it.tdlight.client.TDLibSettings
 import it.tdlight.common.Init
 import it.tdlight.jni.TdApi
 
-import kotlin.io.path.Path
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 
-// The directory where TD Lib settings and cache located
-private const val RESOURCES_PATH: String = "console_client/src/main/resources/tdlib/"
+import kotlin.io.path.Path
+import kotlin.reflect.KClass
 
 class ConsoleClient {
 
@@ -28,13 +38,24 @@ class ConsoleClient {
         }
     )
 
+    // A pair of private and public StateFlow's where Updates are emitted to
+    private val _stateFlow: MutableStateFlow<AuthState> = MutableStateFlow(AuthState.INITIAL)
+    val stateFlow: StateFlow<AuthState> = _stateFlow.asStateFlow()
+
+    /**
+     *
+     */
+    fun emitState(value: AuthState) {
+        _stateFlow.value = value
+    }
+
     /**
      * Subscribe all the handlers for the given Update events
      *
      * @param handlerTypes pass all the enum values each of them represents suitable Update Handler
      *                      from `handler` package
      */
-    fun build(vararg handlerTypes: HandlerType) {
+    fun addHandlers(vararg handlerTypes: HandlerType) {
 
         // Iterate over all the passed values and attach a suitable handler to the client
         for (handler in handlerTypes) {
@@ -43,7 +64,7 @@ class ConsoleClient {
                     // Print out Authorization stages
                     client.addUpdateHandler(
                         TdApi.UpdateAuthorizationState::class.java,
-                        ::onUpdateAuthorizationState
+                        UpdateAuthorizationStateHandler(this)
                     )
                 }
                 HandlerType.COMMAND -> {
@@ -57,7 +78,7 @@ class ConsoleClient {
                     // Sort of a sink. Will handle all Update Types received from Telegram server
                     // TODO: COMMON Handler includes AUTH handler, so you don't need to mention it
                     // separately
-                    client.addUpdatesHandler(CommonUpdatesHandler(client))
+                    client.addUpdatesHandler(CommonUpdatesHandler(this))
                 }
                 HandlerType.GET_ME -> {
                     // Print out its nickname when successfully logged in
@@ -73,21 +94,51 @@ class ConsoleClient {
         }
     }
 
-    fun main() {
+    fun main(
+        customAuthMethod: AuthenticationData = AuthenticationData.consoleLogin(),
+        useCustomClientInteraction: Boolean = false
+//        customClientInteraction: Class<out ClientInteraction>? = null // TODO
+    ) {
         // Initialize TDLight native libraries
         Init.start()
 
-        // On the first run will establish console dialog were asks for phone number and sends code
-        client.start(AuthenticationData.consoleLogin())
+        // If clientInteraction is set, implement the custom Client Interaction
+        // Otherwise do nothing, `it.tdlight.client.ScannerClientInteraction` will be used
+        if (useCustomClientInteraction) {
+            val interactor: ClientInteraction = MyScannerClientInteraction(
+                SimpleTelegramClient.blockingExecutor, client
+            )
+            client.setClientInteraction(interactor)
+        }
 
+        // On the first run will establish console dialog were asks for phone number and sends code
+        client.start(customAuthMethod)
+
+        // delay(5000)
         // Wait until TDLight is closed
+        // client.sendClose()
         client.waitForExit()
     }
 
 }
 
-fun main() {
-    val client: ConsoleClient = ConsoleClient()
-    client.build(HandlerType.COMMON)
-    client.main()
+/**
+ * Just for testing purposes
+ */
+suspend fun main() {
+    val consoleCLI: ConsoleClient = ConsoleClient()
+    consoleCLI.addHandlers(HandlerType.COMMON)
+
+    val scope: CoroutineScope = CoroutineScope(Dispatchers.Default)
+    val waitForExitJob: Job = scope.launch {
+        consoleCLI.main()
+    }
+
+    scope.launch {
+        consoleCLI.stateFlow.collect {
+            println(it)
+        }
+    }
+
+    waitForExitJob.join()
 }
