@@ -1,5 +1,7 @@
 package com.github.otr.console_client.data.network.handler
 
+import com.github.otr.console_client.data.network.handler.chat.ResultHandlerBase
+import it.tdlight.client.Result
 import it.tdlight.jni.TdApi
 
 import org.slf4j.Logger
@@ -67,5 +69,56 @@ fun onUpdateAuthorizationState(update: TdApi.UpdateAuthorizationState) {
             logger.debug("$causePrefix $causeName, $message")
         }
     }
-
 }
+
+//
+//object UpdateAuthorizationStateHandler: ResultHandlerBase<TdApi.UpdateAuthorizationState>(
+//    loggerName = "AuthUpdate"
+//) {
+//
+//    private val causePrefix: String = "Received"
+//
+//    override fun onResult(result: Result<TdApi.UpdateAuthorizationState>) {
+//        val update: TdApi.UpdateAuthorizationState = result.get()
+//        when (update.authorizationState) {
+//            is TdApi.AuthorizationStateWaitTdlibParameters -> {
+//                val causeName: String = "AuthorizationStateWaitTdlibParameters"
+//                val message: String = "Usually Simple Client handles this for you so you don't need"
+//                logger.debug("$causePrefix $causeName, $message")
+//            }
+//            is TdApi.AuthorizationStateReady -> {
+//                val causeName: String = "AuthorizationStateReady"
+//                val message: String = "Logged in"
+//                logger.debug("$causePrefix $causeName, $message")
+//            }
+//            is TdApi.AuthorizationStateClosing -> {
+//                val causeName: String = "AuthorizationStateClosing"
+//                val message: String = "Closing..."
+//                logger.debug("$causePrefix $causeName, $message")
+//            }
+//            is TdApi.AuthorizationStateClosed -> {
+//                val causeName: String = "AuthorizationStateClosed"
+//                val message: String = "Closed"
+//                logger.debug("$causePrefix $causeName, $message")
+//            }
+//            is TdApi.AuthorizationStateLoggingOut -> {
+//                val causeName: String = "AuthorizationStateLoggingOut"
+//                val message: String = "Logging out..."
+//                logger.debug("$causePrefix $causeName, $message")
+//            }
+//            else -> {
+//                val causeName: String = "${update.authorizationState}"
+//                val message: String = "Unsupported state"
+//                logger.debug("$causePrefix $causeName, $message")
+//            }
+//        }
+//    }
+//
+//    /**
+//     *
+//     */
+//    private fun logAuthState(causeName: String, message: String) {
+//        logger.debug("$causePrefix $causeName, $message")
+//    }
+//
+//}

@@ -64,7 +64,8 @@ class CommonUpdatesHandler(
             // Represents an incoming update about the authorization state of the user.
             // https://github.com/OTR/Kotlin-Telegram-Client/wiki/Td-Api-Update-Authorization-State
             TdApi.UpdateAuthorizationState::class.java -> {
-                logger.trace(buildLogMessage(update, "TODO: Redirect to Auth Handler"))
+                update as TdApi.UpdateAuthorizationState
+                onUpdateAuthorizationState(update)
             }
             // Note that in this branch we catch **ONLY THE LAST** message of a chat
             TdApi.UpdateChatLastMessage::class.java -> {
