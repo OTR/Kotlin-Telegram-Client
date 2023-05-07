@@ -55,6 +55,8 @@ class ConsoleClient {
                 }
                 HandlerType.COMMON -> {
                     // Sort of a sink. Will handle all Update Types received from Telegram server
+                    // TODO: COMMON Handler includes AUTH handler, so you don't need to mention it
+                    // separately
                     client.addUpdatesHandler(CommonUpdatesHandler(client))
                 }
                 HandlerType.GET_ME -> {
@@ -86,6 +88,6 @@ class ConsoleClient {
 
 fun main() {
     val client: ConsoleClient = ConsoleClient()
-    client.build(HandlerType.AUTH, HandlerType.COMMON)
+    client.build(HandlerType.COMMON)
     client.main()
 }
