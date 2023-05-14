@@ -29,12 +29,14 @@ import kotlinx.coroutines.launch
 import kotlin.io.path.Path
 import kotlin.reflect.KClass
 
-class ConsoleClient {
+class ConsoleClient(
+    val resourcesPath: String = RESOURCES_PATH
+) {
 
     // Create and configure a client
     private val client = SimpleTelegramClient(
         TDLibSettings.create(APIToken.example()).apply {
-            databaseDirectoryPath = Path(RESOURCES_PATH).resolve("db")
+            databaseDirectoryPath = Path(resourcesPath).resolve("db")
         }
     )
 
