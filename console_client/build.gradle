@@ -28,4 +28,8 @@ dependencies {
 
     // To use Kotlin's coroutine Flow
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
+
+    // JUnit 4
+    testImplementation("junit:junit:4.13.2")
+
 }
