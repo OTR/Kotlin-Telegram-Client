@@ -2,12 +2,8 @@ package com.github.otr.console_client.data.network
 
 import com.github.otr.console_client.data.network.handler.HandlerType
 import com.github.otr.console_client.domain.entity.AuthState
-import jdk.jfr.Description
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 import org.junit.Assert.assertEquals
@@ -88,7 +84,9 @@ class ConsoleClientTest {
     }
 
     // TODO: Test emitting States
-//    consoleCLI.emitState(AuthState.LOGGING_OUT)
-//    Thread.sleep(500)
+    // fun testEmittingStates() {
+    //     consoleCLI.emitState(AuthState.LOGGING_OUT)
+    //
+    // }
 
 }

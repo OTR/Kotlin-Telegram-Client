@@ -2,6 +2,7 @@ package com.github.otr.console_client.data.network
 
 import com.github.otr.console_client.data.network.config.RESOURCES_PATH
 import com.github.otr.console_client.data.network.handler.CommonUpdatesHandler
+import com.github.otr.console_client.data.network.handler.DefaultExceptionHandler
 import com.github.otr.console_client.data.network.handler.HandlerType
 import com.github.otr.console_client.data.network.handler.UpdateAuthorizationStateHandler
 import com.github.otr.console_client.data.network.handler.onGetMe
@@ -27,7 +28,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 import kotlin.io.path.Path
-import kotlin.reflect.KClass
 
 class ConsoleClient(
     val resourcesPath: String = RESOURCES_PATH
@@ -94,6 +94,9 @@ class ConsoleClient(
                 }
             }
         }
+
+        // Add default exception handler
+        client.addDefaultExceptionHandler(DefaultExceptionHandler(this))
     }
 
     fun main(
