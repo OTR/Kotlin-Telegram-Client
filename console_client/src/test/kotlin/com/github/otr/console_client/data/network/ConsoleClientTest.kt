@@ -4,12 +4,18 @@ import com.github.otr.console_client.data.network.handler.HandlerType
 import com.github.otr.console_client.domain.entity.AuthState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.runTest
 
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
+import org.junit.runners.model.MultipleFailureException.assertEmpty
 
 /**
  *
@@ -55,8 +61,9 @@ class ConsoleClientTest {
         assertEquals(expectedState, actualState)
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun testMainMethodOfConsoleClient() {
+    fun testMainMethodOfConsoleClient() = runTest {
         // GIVEN
         val resourcesPath: String = tempFolder.root.path
         val consoleCLI: ConsoleClient = ConsoleClient(resourcesPath)
@@ -66,10 +73,11 @@ class ConsoleClientTest {
             AuthState.WAIT_TD_LIB_PARAMETERS,
             AuthState.WAIT_PHONE_NUMBER
         )
-        stateSequence.take(1)
+        val scope = CoroutineScope(Dispatchers.Default)
 
         // WHEN
-        val scope = CoroutineScope(Dispatchers.Default)
+        scope.launch { consoleCLI.main() }
+
         // THEN
         scope.launch {
             consoleCLI.stateFlow.collect {
@@ -79,8 +87,9 @@ class ConsoleClientTest {
                 assertEquals(expectedState, actualState)
             }
         }
-        scope.launch { consoleCLI.main() }
-        Thread.sleep(5000)
+
+        Thread.sleep(1000) // FIXME
+        assertEquals(0, stateSequence.size)
     }
 
     // TODO: Test emitting States
@@ -88,5 +97,4 @@ class ConsoleClientTest {
     //     consoleCLI.emitState(AuthState.LOGGING_OUT)
     //
     // }
-
 }
