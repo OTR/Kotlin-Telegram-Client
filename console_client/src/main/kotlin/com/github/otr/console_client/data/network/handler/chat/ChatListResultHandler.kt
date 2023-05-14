@@ -1,8 +1,7 @@
-package com.github.otr.console_client.handler.chat
+package com.github.otr.console_client.data.network.handler.chat
 
 import it.tdlight.client.Result
 import it.tdlight.jni.TdApi
-import it.tdlight.jni.TdApi.ChatListFilter
 
 /**
  * Takes undetermined abstract base class `TdApi.ChatList`

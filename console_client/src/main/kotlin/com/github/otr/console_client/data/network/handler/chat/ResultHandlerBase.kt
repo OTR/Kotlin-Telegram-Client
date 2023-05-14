@@ -1,7 +1,8 @@
-package com.github.otr.console_client.handler.chat
+package com.github.otr.console_client.data.network.handler.chat
 
 import it.tdlight.client.GenericResultHandler
 import it.tdlight.jni.TdApi
+
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 

@@ -1,9 +1,10 @@
-package com.github.otr.console_client.handler
+package com.github.otr.console_client.data.network.handler
 
 import it.tdlight.client.GenericUpdateHandler
 import it.tdlight.client.Result
 import it.tdlight.client.SimpleTelegramClient
 import it.tdlight.jni.TdApi
+
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
