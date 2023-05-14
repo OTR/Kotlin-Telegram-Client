@@ -32,4 +32,7 @@ dependencies {
     // JUnit 4
     testImplementation("junit:junit:4.13.2")
 
+    // Coroutine testing API ( to use `runTest {}` method)
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
+
 }
