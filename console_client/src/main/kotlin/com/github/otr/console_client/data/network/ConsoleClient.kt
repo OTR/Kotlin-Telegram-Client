@@ -29,14 +29,38 @@ import kotlinx.coroutines.launch
 
 import kotlin.io.path.Path
 
+/**
+ * @param useTestDc pass true to use Telegram test environment instead of the production environment. On Test DC use test phone numbers (like `9996611111`) to authorize
+ *
+ * @see it.tdlight.client.TDLibSettings.setUseTestDatacenter
+ *
+ * @see
+ * <a href="https://tdlight-team.github.io/tdlight-docs/tdlight.api/it/tdlight/jni/TdApi.SetTdlibParameters.html#useTestDc">
+ *     Documentation on a parameter `useTestDc` of a constructor
+ *     </a>
+ *
+ * @see
+ * <a href="https://core.telegram.org/bots/features#dedicated-test-environment">
+ *     Documentation on Telegram test environment
+ *     </a>
+ *
+ * @see
+ * <a href="https://core.telegram.org/api/auth#test-accounts">
+ *     Documentation on test phone numbers
+ *     </a>
+ */
 class ConsoleClient(
-    val resourcesPath: String = RESOURCES_PATH
+    val resourcesPath: String = RESOURCES_PATH,
+    private val useTestDc: Boolean = false
 ) {
 
     // Create and configure a client
     private val client = SimpleTelegramClient(
         TDLibSettings.create(APIToken.example()).apply {
             databaseDirectoryPath = Path(resourcesPath).resolve("db")
+            if (useTestDc) {
+                setUseTestDatacenter(useTestDc)
+            }
         }
     )
 
@@ -131,7 +155,7 @@ class ConsoleClient(
  * Just for testing purposes
  */
 suspend fun main() {
-    val consoleCLI: ConsoleClient = ConsoleClient()
+    val consoleCLI: ConsoleClient = ConsoleClient(useTestDc = true)
     consoleCLI.addHandlers(HandlerType.COMMON)
 
     val scope: CoroutineScope = CoroutineScope(Dispatchers.Default)
