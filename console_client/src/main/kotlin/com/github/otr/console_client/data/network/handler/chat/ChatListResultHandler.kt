@@ -19,7 +19,7 @@ import it.tdlight.jni.TdApi
  * @see it.tdlight.client.SimpleTelegramClient.mainChatsLoader
  *
  */
-object ChatListResultHandler : ResultHandlerBase<TdApi.ChatList>(
+internal object ChatListResultHandler : ResultHandlerBase<TdApi.ChatList>(
     loggerName = "ChatListResult"
 ) {
 

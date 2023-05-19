@@ -8,6 +8,8 @@ package com.github.otr.console_client.domain.entity
 enum class AuthState(var message: String = "") {
     INITIAL,
     ERROR, // FIXME: Replace with sealed classes
+    SEND_PHONE_NUMBER,
+    SEND_VERIFICATION_CODE,
     CLOSED,
     CLOSING,
     LOGGING_OUT,

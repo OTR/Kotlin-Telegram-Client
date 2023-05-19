@@ -8,6 +8,7 @@ import it.tdlight.jni.TdApi
 
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.slf4j.event.Level
 
 /**
  * Handle Authorization States which have sent from the TD Lib C++ module.
@@ -52,7 +53,8 @@ class UpdateAuthorizationStateHandler(
                 consoleCLI.emitState(AuthState.WAIT_TD_LIB_PARAMETERS)
                 logAuthState(
                     causeName = "AuthorizationStateWaitTdlibParameters",
-                    message = "Usually Simple Client handles this for you so you don't need"
+                    message = "Usually Simple Client handles this for you so you don't need",
+                    level = Level.TRACE
                 )
             }
             is TdApi.AuthorizationStateWaitPhoneNumber -> {
@@ -114,8 +116,9 @@ class UpdateAuthorizationStateHandler(
     /**
      *
      */
-    private fun logAuthState(causeName: String, message: String) {
-        logger.debug("$causePrefix $causeName, $message")
+    private fun logAuthState(causeName: String, message: String, level: Level = Level.DEBUG) {
+        val argument: String = "$causePrefix $causeName, $message"
+        logger.atLevel(level).log(argument)
     }
 
 }
