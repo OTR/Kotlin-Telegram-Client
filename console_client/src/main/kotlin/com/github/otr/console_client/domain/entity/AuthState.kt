@@ -5,8 +5,9 @@ package com.github.otr.console_client.domain.entity
  *     Generated docs for `TdApi.AuthorizationState`
  *     </a>
  */
-enum class AuthState {
+enum class AuthState(var message: String = "") {
     INITIAL,
+    ERROR, // FIXME: Replace with sealed classes
     CLOSED,
     CLOSING,
     LOGGING_OUT,

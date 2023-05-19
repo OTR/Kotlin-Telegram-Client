@@ -54,6 +54,13 @@ object MainActivity {
                     }
                     AuthState.WAIT_REGISTRATION -> { println("WAIT_REGISTRATION") }
                     AuthState.WAIT_TD_LIB_PARAMETERS -> { println("WAIT_TD_LIB_PARAMETERS") }
+
+                    // FIXME: Replace with sealed classes
+                    AuthState.ERROR -> {
+                        when(it.message) {
+                            "PHONE_CODE_INVALID" -> { println("PHONE_CODE_INVALID") }
+                        }
+                    }
                 }
             }
         }

@@ -2,12 +2,15 @@ package com.github.otr.console_client.data.network
 
 import com.github.otr.console_client.data.network.config.RESOURCES_PATH
 import com.github.otr.console_client.data.network.handler.CommonUpdatesHandler
+import com.github.otr.console_client.data.network.handler.DefaultExceptionHandler
 import com.github.otr.console_client.data.network.handler.HandlerType
 import com.github.otr.console_client.data.network.handler.UpdateAuthorizationStateHandler
 import com.github.otr.console_client.data.network.handler.onGetMe
 import com.github.otr.console_client.data.network.handler.onStopCommand
 import com.github.otr.console_client.data.network.handler.onUpdateNewMessage
+import com.github.otr.console_client.data.network.login_handler.MyConsoleLogin
 import com.github.otr.console_client.data.network.login_handler.MyScannerClientInteraction
+import com.github.otr.console_client.data.network.login_handler.TestClientInteraction
 import com.github.otr.console_client.domain.entity.AuthState
 
 import it.tdlight.client.APIToken
@@ -27,14 +30,39 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 import kotlin.io.path.Path
-import kotlin.reflect.KClass
 
-class ConsoleClient {
+/**
+ * @param useTestDc pass true to use Telegram test environment instead of the production environment. On Test DC use test phone numbers (like `9996611111`) to authorize
+ *
+ * @see it.tdlight.client.TDLibSettings.setUseTestDatacenter
+ *
+ * @see
+ * <a href="https://tdlight-team.github.io/tdlight-docs/tdlight.api/it/tdlight/jni/TdApi.SetTdlibParameters.html#useTestDc">
+ *     Documentation on a parameter `useTestDc` of a constructor
+ *     </a>
+ *
+ * @see
+ * <a href="https://core.telegram.org/bots/features#dedicated-test-environment">
+ *     Documentation on Telegram test environment
+ *     </a>
+ *
+ * @see
+ * <a href="https://core.telegram.org/api/auth#test-accounts">
+ *     Documentation on test phone numbers
+ *     </a>
+ */
+class ConsoleClient(
+    val resourcesPath: String = RESOURCES_PATH,
+    private val useTestDc: Boolean = false
+) {
 
     // Create and configure a client
     private val client = SimpleTelegramClient(
         TDLibSettings.create(APIToken.example()).apply {
-            databaseDirectoryPath = Path(RESOURCES_PATH).resolve("db")
+            databaseDirectoryPath = Path(resourcesPath).resolve("db")
+            if (useTestDc) {
+                setUseTestDatacenter(useTestDc)
+            }
         }
     )
 
@@ -92,11 +120,14 @@ class ConsoleClient {
                 }
             }
         }
+
+        // Add default exception handler
+        client.addDefaultExceptionHandler(DefaultExceptionHandler(this))
     }
 
     fun main(
         customAuthMethod: AuthenticationData = AuthenticationData.consoleLogin(),
-        useCustomClientInteraction: Boolean = false
+        useCustomClientInteraction: ConsoleLogin = ConsoleLogin.MY_SCANNER_CLIENT_INTERACTION
 //        customClientInteraction: Class<out ClientInteraction>? = null // TODO
     ) {
         // Initialize TDLight native libraries
@@ -104,11 +135,21 @@ class ConsoleClient {
 
         // If clientInteraction is set, implement the custom Client Interaction
         // Otherwise do nothing, `it.tdlight.client.ScannerClientInteraction` will be used
-        if (useCustomClientInteraction) {
-            val interactor: ClientInteraction = MyScannerClientInteraction(
-                SimpleTelegramClient.blockingExecutor, client
-            )
-            client.setClientInteraction(interactor)
+        // FIXME: pass class reference not Boolean or String
+        when (useCustomClientInteraction) {
+            ConsoleLogin.MY_SCANNER_CLIENT_INTERACTION -> {
+                val interactor: ClientInteraction = MyScannerClientInteraction(
+                    SimpleTelegramClient.blockingExecutor, client
+                )
+                client.setClientInteraction(interactor)
+            }
+            ConsoleLogin.TEST_CLIENT_INTERACTION -> {
+                val interactor: ClientInteraction = TestClientInteraction(
+                    SimpleTelegramClient.blockingExecutor, client
+                )
+                client.setClientInteraction(interactor)
+            }
+
         }
 
         // On the first run will establish console dialog were asks for phone number and sends code
@@ -123,15 +164,38 @@ class ConsoleClient {
 }
 
 /**
+ *
+ */
+enum class ConsoleLogin {
+    MY_SCANNER_CLIENT_INTERACTION,
+    TEST_CLIENT_INTERACTION
+}
+
+/**
  * Just for testing purposes
  */
-suspend fun main() {
-    val consoleCLI: ConsoleClient = ConsoleClient()
+suspend fun main(args: Array<String>) {
+    var useTestDc: Boolean = false
+    // Parse arguments
+    if (args.size > 0 && args.contains("--test")) {
+        useTestDc = true
+    }
+
+    // Create an instance of a Console Client and set it up
+    val consoleCLI: ConsoleClient = ConsoleClient(useTestDc = useTestDc)
     consoleCLI.addHandlers(HandlerType.COMMON)
 
     val scope: CoroutineScope = CoroutineScope(Dispatchers.Default)
     val waitForExitJob: Job = scope.launch {
-        consoleCLI.main()
+        if (useTestDc) {
+            consoleCLI.main(
+                customAuthMethod = MyConsoleLogin(),
+                useCustomClientInteraction = ConsoleLogin.TEST_CLIENT_INTERACTION
+            )
+        } else {
+            consoleCLI.main()
+        }
+
     }
 
     scope.launch {
