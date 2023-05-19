@@ -9,6 +9,7 @@ import com.github.otr.console_client.data.network.handler.onGetMe
 import com.github.otr.console_client.data.network.handler.onStopCommand
 import com.github.otr.console_client.data.network.handler.onUpdateNewMessage
 import com.github.otr.console_client.data.network.login_handler.MyScannerClientInteraction
+import com.github.otr.console_client.data.network.login_handler.TestClientInteraction
 import com.github.otr.console_client.domain.entity.AuthState
 
 import it.tdlight.client.APIToken
@@ -125,7 +126,7 @@ class ConsoleClient(
 
     fun main(
         customAuthMethod: AuthenticationData = AuthenticationData.consoleLogin(),
-        useCustomClientInteraction: Boolean = false
+        useCustomClientInteraction: ConsoleLogin = ConsoleLogin.MY_SCANNER_CLIENT_INTERACTION
 //        customClientInteraction: Class<out ClientInteraction>? = null // TODO
     ) {
         // Initialize TDLight native libraries
@@ -133,11 +134,21 @@ class ConsoleClient(
 
         // If clientInteraction is set, implement the custom Client Interaction
         // Otherwise do nothing, `it.tdlight.client.ScannerClientInteraction` will be used
-        if (useCustomClientInteraction) {
-            val interactor: ClientInteraction = MyScannerClientInteraction(
-                SimpleTelegramClient.blockingExecutor, client
-            )
-            client.setClientInteraction(interactor)
+        // FIXME: pass class reference not Boolean or String
+        when (useCustomClientInteraction) {
+            ConsoleLogin.MY_SCANNER_CLIENT_INTERACTION -> {
+                val interactor: ClientInteraction = MyScannerClientInteraction(
+                    SimpleTelegramClient.blockingExecutor, client
+                )
+                client.setClientInteraction(interactor)
+            }
+            ConsoleLogin.TEST_CLIENT_INTERACTION -> {
+                val interactor: ClientInteraction = TestClientInteraction(
+                    SimpleTelegramClient.blockingExecutor, client
+                )
+                client.setClientInteraction(interactor)
+            }
+
         }
 
         // On the first run will establish console dialog were asks for phone number and sends code
@@ -149,6 +160,14 @@ class ConsoleClient(
         client.waitForExit()
     }
 
+}
+
+/**
+ *
+ */
+enum class ConsoleLogin {
+    MY_SCANNER_CLIENT_INTERACTION,
+    TEST_CLIENT_INTERACTION
 }
 
 /**

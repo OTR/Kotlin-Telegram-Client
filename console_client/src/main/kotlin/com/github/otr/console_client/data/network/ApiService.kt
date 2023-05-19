@@ -35,7 +35,7 @@ object ApiService {
         val waitForExitJob: Job = scope.launch {
             consoleCLI.main(
                 customAuthMethod = MyConsoleLogin(),
-                useCustomClientInteraction = true
+                useCustomClientInteraction = ConsoleLogin.MY_SCANNER_CLIENT_INTERACTION
             )
         }
 
