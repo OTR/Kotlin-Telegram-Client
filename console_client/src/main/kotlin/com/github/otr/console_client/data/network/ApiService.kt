@@ -2,9 +2,7 @@ package com.github.otr.console_client.data.network
 
 import com.github.otr.console_client.data.network.handler.HandlerType
 import com.github.otr.console_client.data.network.login_handler.MyConsoleLogin
-import com.github.otr.console_client.data.network.login_handler.MyScannerClientInteraction
 import com.github.otr.console_client.domain.entity.AuthState
-import it.tdlight.client.ClientInteraction
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

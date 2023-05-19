@@ -29,6 +29,8 @@ Android device (or emulator) with API Level from API 26 (Android 8 Oreo) to API 
 
 ## Development environment
 
+[FIXME]: Update versions of dependencies
+
  * OS: Windows 10
  * Gradle JDK: Android Studio Default JDK 11 (version 11.0.15)
  * Android Gradle Plugin Version: 7.4.2
@@ -38,6 +40,8 @@ Android device (or emulator) with API Level from API 26 (Android 8 Oreo) to API 
  * Source compatibility (for console client module): Java version 17 (Java 17)
  * Jetpack Compose version: 1.4.1
  * Jetpack Compose Compiler version: 1.4.4
+ * TDLight-Java version 2.8.10.6
+ * TDLib version 1.8.10
 
 ## Tested on devices (test device environment)
 

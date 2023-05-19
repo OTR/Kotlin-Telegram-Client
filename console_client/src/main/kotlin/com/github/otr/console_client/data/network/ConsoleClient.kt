@@ -8,6 +8,7 @@ import com.github.otr.console_client.data.network.handler.UpdateAuthorizationSta
 import com.github.otr.console_client.data.network.handler.onGetMe
 import com.github.otr.console_client.data.network.handler.onStopCommand
 import com.github.otr.console_client.data.network.handler.onUpdateNewMessage
+import com.github.otr.console_client.data.network.login_handler.MyConsoleLogin
 import com.github.otr.console_client.data.network.login_handler.MyScannerClientInteraction
 import com.github.otr.console_client.data.network.login_handler.TestClientInteraction
 import com.github.otr.console_client.domain.entity.AuthState
@@ -173,13 +174,28 @@ enum class ConsoleLogin {
 /**
  * Just for testing purposes
  */
-suspend fun main() {
-    val consoleCLI: ConsoleClient = ConsoleClient(useTestDc = true)
+suspend fun main(args: Array<String>) {
+    var useTestDc: Boolean = false
+    // Parse arguments
+    if (args.size > 0 && args.contains("--test")) {
+        useTestDc = true
+    }
+
+    // Create an instance of a Console Client and set it up
+    val consoleCLI: ConsoleClient = ConsoleClient(useTestDc = useTestDc)
     consoleCLI.addHandlers(HandlerType.COMMON)
 
     val scope: CoroutineScope = CoroutineScope(Dispatchers.Default)
     val waitForExitJob: Job = scope.launch {
-        consoleCLI.main()
+        if (useTestDc) {
+            consoleCLI.main(
+                customAuthMethod = MyConsoleLogin(),
+                useCustomClientInteraction = ConsoleLogin.TEST_CLIENT_INTERACTION
+            )
+        } else {
+            consoleCLI.main()
+        }
+
     }
 
     scope.launch {
