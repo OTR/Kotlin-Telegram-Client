@@ -1,8 +1,9 @@
 package com.github.otr.console_client.data.network
 
 import com.github.otr.console_client.data.network.handler.HandlerType
-import com.github.otr.console_client.data.network.login_handler.MyConsoleLogin
+import com.github.otr.console_client.data.network.login_handler.ConsoleLoginWithFlow
 import com.github.otr.console_client.domain.entity.AuthState
+import com.github.otr.console_client.domain.entity.chat.Roster
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -15,9 +16,11 @@ import kotlinx.coroutines.launch
 /**
  *
  */
-object ApiService {
+class ApiService(
+    val roster: Roster
+) {
 
-    private val consoleCLI: ConsoleClient = ConsoleClient()
+    private val consoleCLI: ConsoleClient = ConsoleClient(roster)
 
     private val _authStateFlow: MutableStateFlow<AuthState> = MutableStateFlow(AuthState.INITIAL)
     val authStateFlow: StateFlow<AuthState> = _authStateFlow.asStateFlow()
@@ -30,10 +33,11 @@ object ApiService {
 
     private fun main() {
         consoleCLI.addHandlers(HandlerType.COMMON)
+
         val waitForExitJob: Job = scope.launch {
             consoleCLI.main(
-                customAuthMethod = MyConsoleLogin(),
-                useCustomClientInteraction = ConsoleLogin.MY_SCANNER_CLIENT_INTERACTION
+                customAuthMethod = ConsoleLoginWithFlow(consoleCLI),
+                useCustomClientInteraction = ConsoleLogin.CLIENT_INTERACTION_WITH_FLOW
             )
         }
 
@@ -49,11 +53,15 @@ object ApiService {
     }
 
     fun setPhoneNumber(phoneNumber: String) {
-        TODO("Api Service Not yet implemented")
+        val phoneNumberState: AuthState = AuthState.SEND_PHONE_NUMBER
+        phoneNumberState.message = phoneNumber
+        consoleCLI.emitState(phoneNumberState)
     }
 
     fun setVerificationCode(verificationCode: String) {
-        TODO("Api Service Not yet implemented")
+        val verificationCodeState: AuthState = AuthState.SEND_VERIFICATION_CODE
+        verificationCodeState.message = verificationCode
+        consoleCLI.emitState(verificationCodeState)
     }
 
 }

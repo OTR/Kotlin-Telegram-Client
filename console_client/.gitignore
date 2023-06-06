@@ -1,3 +1,4 @@
 /build
 # Ignore directory where TD Lib settings and cache located
 src/main/resources/tdlib/*
+src/test/resources/tdlib/*

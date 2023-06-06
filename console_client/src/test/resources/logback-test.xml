@@ -1,0 +1,18 @@
+<configuration>
+    <variable name="BASE_TEST_LOG_DIR" value="src/test/resources/tdlib/log"/>
+    <!-- ___________________________________________________________________________________________ -->
+    <appender name="ROSTER_LOGS_TO_FILE" class="ch.qos.logback.core.FileAppender">
+        <file>${BASE_TEST_LOG_DIR}/roster.log</file>
+        <append>true</append>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>[%date{HH:mm:ss}][%-5level][%-14logger] - %msg\n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+    <!-- ___________________________________________________________________________________________ -->
+    <!-- Log intermediate states during processing of new events by BlankRoster object -->
+    <logger name="TstBlankRoster" level="DEBUG" additivity="true">
+        <appender-ref ref="ROSTER_LOGS_TO_FILE" />
+    </logger>
+    <!-- ___________________________________________________________________________________________ -->
+</configuration>

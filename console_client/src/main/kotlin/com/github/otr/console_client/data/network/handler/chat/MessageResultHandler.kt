@@ -1,5 +1,10 @@
 package com.github.otr.console_client.data.network.handler.chat
 
+import com.github.otr.console_client.data.mapper.RosterMapper
+import com.github.otr.console_client.data.mapper.asLogMsg
+import com.github.otr.console_client.data.network.ConsoleClient
+import com.github.otr.console_client.domain.entity.chat.Message
+
 import it.tdlight.client.Result
 import it.tdlight.jni.TdApi
 
@@ -23,71 +28,20 @@ import it.tdlight.jni.TdApi
  *
  */
 class MessageResultHandler(
-    loggerName: String
+    loggerName: String,
+    val consoleCLI: ConsoleClient
 ) : ResultHandlerBase<TdApi.Message>(loggerName) {
 
+    private val mapper: RosterMapper = RosterMapper
+
     override fun onResult(result: Result<TdApi.Message>) {
-        val message: TdApi.Message = result.get()
-        // Message identifier; unique for the chat to which the message belongs.
-        val messageId: Long = message.id
-        // Identifier of the sender of the message.
-        val messageSender: TdApi.MessageSender = message.senderId
-        val senderId: Long = when (messageSender) {
-            is TdApi.MessageSenderUser -> {
-                messageSender.userId
-            }
-            is TdApi.MessageSenderChat -> {
-                messageSender.chatId
-            }
-            else -> {
-                val typeName: String = messageSender.javaClass.simpleName
-                val reason: String = "Unknown message sender type: $typeName"
-                logger.warn(reason)
-                throw IllegalStateException(reason)
-            }
-        }
-        // Chat identifier. Same as senderId?
-        val chatId: Long = message.chatId
-        // message.canBeForwarder message.canBeSaved message.isChannelPost
-        // Point in time (Unix timestamp) when the message was sent.
-        val date: Int = message.date
-        // This class is an abstract base class. Contains the content of a message.
-        val content: TdApi.MessageContent = message.content
-        when (content) {
-            is TdApi.MessageText -> {
-                // A preview of the web page that's mentioned in the text; may be null.
-                // val webPage: TdApi.WebPage = content.webPage
-                // A text with some entities.
-                val formattedText: TdApi.FormattedText = content.text
-                // Entities contained in the text.
-                // Entities can be nested, but must not mutually intersect with each other.
-                // Pre, Code and PreCode entities can't contain other entities.
-                // Bold, Italic, Underline and Strikethrough entities can contain
-                // and to be contained in all other entities.
-                // All other entities can't contain each other.
-                // val entities: Array<TdApi.TextEntity> = formattedText.entities
-                val plainText: String = formattedText.text
-                if (loggerName == "LastMessageHan") {
-                    logger.debug(
-                        "The last message in a chat with id: $chatId has plain text: `$plainText`"
-                    )
-                } else if (loggerName == "NewMessageHand") {
-                    logger.debug(
-                        "Received a new plain text message with id $messageId: `$plainText`" +
-                        " in a chat with id: $chatId"
-                    )
-                }
-                else {
-                    logger.debug(
-                        "Received a plain text message: `$plainText` in a chat with id: $chatId"
-                    )
-                }
-            }
-            else -> {
-                // TODO: https://tdlight-team.github.io/tdlight-docs/tdlight.api/it/tdlight/jni/TdApi.MessageContent.html
-                logger.warn("TODO: Handle all remaining subclasses of TdApi.MessageContent")
-            }
-        }
+        val messageResult: TdApi.Message = result.get()
+        val messageModel: Message = mapper.mapMessageResultToModel(messageResult)
+        //
+        logger.debug(messageModel.asLogMsg(loggerName))
+        //
+        // TODO: when(loggerName) "LastMessage" or "NewMessage" ?
+        consoleCLI.roster.addOrUpdateMessage(messageModel)
 
     }
 

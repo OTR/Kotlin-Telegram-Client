@@ -1,5 +1,9 @@
 package com.github.otr.console_client.data.network.handler.chat
 
+import com.github.otr.console_client.data.mapper.RosterMapper
+import com.github.otr.console_client.data.mapper.asLogMsg
+import com.github.otr.console_client.data.network.ConsoleClient
+import com.github.otr.console_client.domain.entity.chat.User
 import it.tdlight.client.Result
 import it.tdlight.jni.TdApi
 
@@ -8,9 +12,13 @@ import it.tdlight.jni.TdApi
  *
  * @see it.tdlight.client.GenericResultHandler
  */
-object UserResultHandler : ResultHandlerBase<TdApi.User>(
+class UserResultHandler(
+    private val consoleCLI: ConsoleClient
+) : ResultHandlerBase<TdApi.User>(
     loggerName = "UserResultHand"
 ) {
+
+    private val mapper: RosterMapper = RosterMapper
 
     /**
      * @see
@@ -23,22 +31,12 @@ object UserResultHandler : ResultHandlerBase<TdApi.User>(
      * </a>
      */
     override fun onResult(result: Result<TdApi.User>) {
-        val user: TdApi.User = result.get()
-        val firstName: String = user.firstName
-        val usernames: TdApi.Usernames? = user.usernames
-        val activeUsernames: Array<String>? = usernames?.activeUsernames
-        val nickName: String? = activeUsernames?.first()
-        val lineAboutNickname: String = if (nickName == null) {
-            "without nickname"
-        } else {
-            "nickname: $nickName"
-        }
-        val phoneNumber: String = user.phoneNumber
-
-        logger.debug(
-            "In our chat list there is a user with first name: $firstName" +
-                    " and $lineAboutNickname and phone number: $phoneNumber"
-        )
+        val userResult: TdApi.User = result.get()
+        val userModel: User = mapper.mapUserResultToModel(userResult)
+        //
+        logger.debug(userModel.asLogMsg())
+        // Update roster
+        consoleCLI.roster.addOrUpdateUser(userModel)
     }
 
 }

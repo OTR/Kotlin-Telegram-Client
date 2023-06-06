@@ -1,5 +1,6 @@
 package com.github.otr.console_client.data.network
 
+import com.github.otr.console_client.data.model.BlankRosterImpl
 import com.github.otr.console_client.data.network.config.RESOURCES_PATH
 import com.github.otr.console_client.data.network.handler.CommonUpdatesHandler
 import com.github.otr.console_client.data.network.handler.DefaultExceptionHandler
@@ -8,10 +9,11 @@ import com.github.otr.console_client.data.network.handler.UpdateAuthorizationSta
 import com.github.otr.console_client.data.network.handler.onGetMe
 import com.github.otr.console_client.data.network.handler.onStopCommand
 import com.github.otr.console_client.data.network.handler.onUpdateNewMessage
-import com.github.otr.console_client.data.network.login_handler.MyConsoleLogin
+import com.github.otr.console_client.data.network.login_handler.ClientInteractionWithFlow
 import com.github.otr.console_client.data.network.login_handler.MyScannerClientInteraction
 import com.github.otr.console_client.data.network.login_handler.TestClientInteraction
 import com.github.otr.console_client.domain.entity.AuthState
+import com.github.otr.console_client.domain.entity.chat.Roster
 
 import it.tdlight.client.APIToken
 import it.tdlight.client.AuthenticationData
@@ -21,13 +23,9 @@ import it.tdlight.client.TDLibSettings
 import it.tdlight.common.Init
 import it.tdlight.jni.TdApi
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
 
 import kotlin.io.path.Path
 
@@ -52,6 +50,7 @@ import kotlin.io.path.Path
  *     </a>
  */
 class ConsoleClient(
+    val roster: Roster = BlankRosterImpl(),
     val resourcesPath: String = RESOURCES_PATH,
     private val useTestDc: Boolean = false
 ) {
@@ -66,12 +65,18 @@ class ConsoleClient(
         }
     )
 
-    // A pair of private and public StateFlow's where Updates are emitted to
     private val _stateFlow: MutableStateFlow<AuthState> = MutableStateFlow(AuthState.INITIAL)
+    /**
+     * A pair of private and public StateFlow's where Updates are emitted to
+     */
     val stateFlow: StateFlow<AuthState> = _stateFlow.asStateFlow()
 
     /**
-     *
+     * This method is user for self emitting States during Authorization process
+     * in order to UI layer display different screens depend on the State
+     * (e.g. A Screen where the User is asked for typing their phone number, or verification code)
+     * Also, this method is used to emit user input to the Flow
+     * in order the console client to send it to and interact with the TD Lib
      */
     fun emitState(value: AuthState) {
         _stateFlow.value = value
@@ -125,6 +130,9 @@ class ConsoleClient(
         client.addDefaultExceptionHandler(DefaultExceptionHandler(this))
     }
 
+    /**
+     * Supposed to be the main infinite loop, FIXME: should be refactored
+     */
     fun main(
         customAuthMethod: AuthenticationData = AuthenticationData.consoleLogin(),
         useCustomClientInteraction: ConsoleLogin = ConsoleLogin.MY_SCANNER_CLIENT_INTERACTION
@@ -135,11 +143,20 @@ class ConsoleClient(
 
         // If clientInteraction is set, implement the custom Client Interaction
         // Otherwise do nothing, `it.tdlight.client.ScannerClientInteraction` will be used
-        // FIXME: pass class reference not Boolean or String
+        // FIXME: pass a reference to the preferred Client Interaction **class**
+        //  instead of `when` statement
         when (useCustomClientInteraction) {
             ConsoleLogin.MY_SCANNER_CLIENT_INTERACTION -> {
                 val interactor: ClientInteraction = MyScannerClientInteraction(
                     SimpleTelegramClient.blockingExecutor, client
+                )
+                client.setClientInteraction(interactor)
+            }
+            ConsoleLogin.CLIENT_INTERACTION_WITH_FLOW -> {
+                val interactor: ClientInteraction = ClientInteractionWithFlow(
+                    SimpleTelegramClient.blockingExecutor,
+                    client,
+                    this
                 )
                 client.setClientInteraction(interactor)
             }
@@ -164,45 +181,11 @@ class ConsoleClient(
 }
 
 /**
- *
+ * FIXME: DELETE ME, pass a reference to the preferred Client Interaction class
+ *  instead of `when` statement
  */
 enum class ConsoleLogin {
     MY_SCANNER_CLIENT_INTERACTION,
-    TEST_CLIENT_INTERACTION
-}
-
-/**
- * Just for testing purposes
- */
-suspend fun main(args: Array<String>) {
-    var useTestDc: Boolean = false
-    // Parse arguments
-    if (args.size > 0 && args.contains("--test")) {
-        useTestDc = true
-    }
-
-    // Create an instance of a Console Client and set it up
-    val consoleCLI: ConsoleClient = ConsoleClient(useTestDc = useTestDc)
-    consoleCLI.addHandlers(HandlerType.COMMON)
-
-    val scope: CoroutineScope = CoroutineScope(Dispatchers.Default)
-    val waitForExitJob: Job = scope.launch {
-        if (useTestDc) {
-            consoleCLI.main(
-                customAuthMethod = MyConsoleLogin(),
-                useCustomClientInteraction = ConsoleLogin.TEST_CLIENT_INTERACTION
-            )
-        } else {
-            consoleCLI.main()
-        }
-
-    }
-
-    scope.launch {
-        consoleCLI.stateFlow.collect {
-            println(it)
-        }
-    }
-
-    waitForExitJob.join()
+    TEST_CLIENT_INTERACTION,
+    CLIENT_INTERACTION_WITH_FLOW
 }

@@ -1,5 +1,9 @@
 package com.github.otr.console_client.data.network.handler.chat
 
+import com.github.otr.console_client.data.mapper.RosterMapper
+import com.github.otr.console_client.data.mapper.asLogMsg
+import com.github.otr.console_client.data.network.ConsoleClient
+import com.github.otr.console_client.domain.entity.chat.Chat
 import it.tdlight.client.Result
 import it.tdlight.jni.TdApi
 
@@ -11,9 +15,13 @@ import it.tdlight.jni.TdApi
  *     Documentation on returned type `TdApi.Chat`
  * </a>
  */
-object ChatResultHandler : ResultHandlerBase<TdApi.Chat>(
+class ChatResultHandler(
+    val consoleCLI: ConsoleClient
+) : ResultHandlerBase<TdApi.Chat>(
     loggerName = "ChatResultHand"
 ) {
+
+    private val mapper: RosterMapper = RosterMapper
 
     /**
      * @see
@@ -23,17 +31,12 @@ object ChatResultHandler : ResultHandlerBase<TdApi.Chat>(
      *
      */
     override fun onResult(result: Result<TdApi.Chat>) {
-        val chat: TdApi.Chat = result.get()
-        val userId: Long = chat.id
-        val chatType: TdApi.ChatType = chat.type
-        val chatTypeName: String = chatType.javaClass.simpleName.removePrefix("ChatType")
-        val chatTitle: String = chat.title
-        val unreadCount: Int = chat.unreadCount
-
-        logger.debug(
-            "There is a ${chatTypeName} chat with $chatTitle." +
-            " You have $unreadCount unread messages from them."
-        )
+        val chatResult: TdApi.Chat = result.get()
+        val chatModel: Chat = mapper.mapChatResultToModel(chatResult)
+        //
+        logger.debug(chatModel.asLogMsg())
+        //
+        consoleCLI.roster.addOrUpdateChat(chatModel)
     }
 
 }

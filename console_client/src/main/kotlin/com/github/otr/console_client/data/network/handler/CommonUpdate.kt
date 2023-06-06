@@ -9,7 +9,6 @@ import com.github.otr.console_client.data.network.handler.chat.UserResultHandler
 import it.tdlight.client.GenericUpdateHandler
 import it.tdlight.client.Result
 import it.tdlight.jni.TdApi
-import it.tdlight.jni.TdApi.Update
 
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -57,11 +56,19 @@ class CommonUpdatesHandler(
             TdApi.UpdateUserStatus::class.java, // The user went online or offline.
             TdApi.UpdateChatReadInbox::class.java, // number of unread messages has been changed.
             TdApi.UpdateChatReadOutbox::class.java, // suspicious
+            // TODO: Check these new types later
+            TdApi.UpdateChatNotificationSettings::class.java,
+            TdApi.UpdateChatAvailableReactions::class.java,
+            TdApi.UpdateUserFullInfo::class.java,
+            TdApi.UpdateSuggestedActions::class.java,
+            TdApi.UpdateBasicGroup::class.java,
+            TdApi.UpdateBasicGroupFullInfo::class.java,
+
         )
     }
 
     /**
-     *
+     * Each Update is passed to their particular handler depend on Update's Type
      */
     override fun onUpdate(update: TdApi.Update) {
         val updateType = update::class.java
@@ -93,13 +100,14 @@ class CommonUpdatesHandler(
     /**
      * Note that in this branch we catch **ONLY THE LAST** message of a chat
      */
-    private fun handleChatLastMessage(update: Update) {
+    private fun handleChatLastMessage(update: TdApi.Update) {
         update as TdApi.UpdateChatLastMessage
         val chatLastMessage: TdApi.Message = update.lastMessage
         // val chatId: Long = update.chatId
         // val chatPositions: Array<TdApi.ChatPosition> = update.positions
         MessageResultHandler(
-            loggerName = "LastMessageHan"
+            loggerName = "LastMessageHan",
+            consoleCLI = consoleCLI
         ).onResult(Result.of(chatLastMessage))
     }
 
@@ -124,7 +132,7 @@ class CommonUpdatesHandler(
     private fun handleNewChat(update: TdApi.Update) {
         update as TdApi.UpdateNewChat
         val newChat: TdApi.Chat = update.chat
-        ChatResultHandler.onResult(Result.of(newChat))
+        ChatResultHandler(consoleCLI).onResult(Result.of(newChat))
     }
 
     /**
@@ -133,7 +141,7 @@ class CommonUpdatesHandler(
      * Number of unread chats, i.e. with unread messages or marked as unread, has changed.
      * This update is sent only if the message database is used.
      */
-    private fun handleUnreadChatCount(update: Update) {
+    private fun handleUnreadChatCount(update: TdApi.Update) {
         update as TdApi.UpdateUnreadChatCount
         val chatList: TdApi.ChatList = update.chatList
         val unreadCount: Int = update.unreadCount
@@ -150,7 +158,7 @@ class CommonUpdatesHandler(
      * This update is sent only if the message database is used.
      * https://tdlight-team.github.io/tdlight-docs/tdlight.api/it/tdlight/jni/TdApi.UpdateUnreadMessageCount.html
      */
-    private fun handleUnreadMessageCount(update: Update) {
+    private fun handleUnreadMessageCount(update: TdApi.Update) {
         update as TdApi.UpdateUnreadMessageCount
         val unreadCount: Int = update.unreadCount
         val chatListType: TdApi.ChatList = update.chatList
@@ -166,17 +174,17 @@ class CommonUpdatesHandler(
     /**
      * Triggers on a real regular user, Spam Bot, `Telegram` account and on itself in chat list
      */
-    private fun handleUser(update: Update) {
+    private fun handleUser(update: TdApi.Update) {
         update as TdApi.UpdateUser
         val user: TdApi.User = update.user
-        UserResultHandler.onResult(Result.of(user))
+        UserResultHandler(consoleCLI).onResult(Result.of(user))
     }
 
     /**
      * https://github.com/OTR/Kotlin-Telegram-Client/wiki/List-of-Update-Options
      * Skip UpdateOptions
      */
-    private fun handleOption(update: Update) {
+    private fun handleOption(update: TdApi.Update) {
         update as TdApi.UpdateOption
         val description: String = "${update.name} : ${update.value}"
         logger.trace(buildLogMessage(update, description))
@@ -185,16 +193,19 @@ class CommonUpdatesHandler(
     /**
      * A new message was received; can also be an outgoing message.
      */
-    private fun handleNewMessage(update: Update) {
+    private fun handleNewMessage(update: TdApi.Update) {
         update as TdApi.UpdateNewMessage
         val message: TdApi.Message = update.message
-        MessageResultHandler(loggerName = "NewMessageHand").onResult(Result.of(message))
+        MessageResultHandler(
+            loggerName = "NewMessageHand",
+            consoleCLI = consoleCLI
+        ).onResult(Result.of(message))
     }
 
     /**
      * Some messages were deleted.
      */
-    private fun handleDeleteMessages(update: Update) {
+    private fun handleDeleteMessages(update: TdApi.Update) {
         update as TdApi.UpdateDeleteMessages
         // Chat identifier.
         val chatId: Long = update.chatId
@@ -217,14 +228,14 @@ class CommonUpdatesHandler(
     /**
      * Skip uninterested Update Types
      */
-    private fun handleUninterestedTypes(update: Update) {
+    private fun handleUninterestedTypes(update: TdApi.Update) {
         logger.trace(buildLogMessage(update, "Update type is not interested"))
     }
 
     /**
      * An else branch for when expression
      */
-    private fun handleUnsupportedTypes(update: Update) {
+    private fun handleUnsupportedTypes(update: TdApi.Update) {
         logger.warn(buildLogMessage(update, "Update type is not supported"))
     }
 
