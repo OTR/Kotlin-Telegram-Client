@@ -55,3 +55,7 @@ So you don't need receive and type a verification code on the next time
 Sometimes inner TD Lib logger sends a log message with trailing `\n` character
 
 :soon: _TODO_
+
+### TODO
+
+Handle `kotlin.io.ReadAfterEOFException: EOF has already been reached` exception
