@@ -1,11 +1,29 @@
 plugins {
+    id 'application'
     id 'java-library'
     id 'org.jetbrains.kotlin.jvm'
 }
 
+application {
+    mainClassName = "com.github.otr.console_client.presentation.activity.MainActivityKt"
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'com.github.otr.console_client.presentation.activity.MainActivityKt'
+    }
+    from { configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+}
+
+
 java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
+
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+    kotlinOptions.jvmTarget = JavaVersion.VERSION_11
 }
 
 repositories {
@@ -17,7 +35,8 @@ dependencies {
 
     // TD Light Java
     implementation(platform("it.tdlight:tdlight-java-bom:2.8.10.6"))
-    implementation("it.tdlight:tdlight-java")
+    // implementation("it.tdlight:tdlight-java")
+    implementation("it.tdlight:tdlight-java-8")
     implementation("it.tdlight:tdlight-natives-windows-amd64")
 
     // SLF4J API
